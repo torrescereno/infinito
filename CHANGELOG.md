@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.5](https://github.com/torrescereno/infinito/compare/v1.1.4...v1.1.5) (2026-03-22)
+
+
+### Bug Fixes
+
+* windows build ([868ffb2](https://github.com/torrescereno/infinito/commit/868ffb2d31fd76de96c8e797de689c181e28e963))
+
 ## [1.1.4](https://github.com/torrescereno/infinito/compare/v1.1.3...v1.1.4) (2026-03-22)
 
 
