@@ -57,16 +57,16 @@
 
 <div align="center">
 
-|                          Notes View                           |                          Canvas View                          |
-| :-----------------------------------------------------------: | :-----------------------------------------------------------: |
+|                       Notes View                        |                       Canvas View                        |
+| :-----------------------------------------------------: | :------------------------------------------------------: |
 | <img width="360" src="resources/screenshots/notes.png"> | <img width="360" src="resources/screenshots/canvas.png"> |
 
-|                          Config View                          |                          Index View                           |
-| :-----------------------------------------------------------: | :-----------------------------------------------------------: |
+|                       Config View                        |                       Index View                        |
+| :------------------------------------------------------: | :-----------------------------------------------------: |
 | <img width="360" src="resources/screenshots/config.png"> | <img width="360" src="resources/screenshots/index.png"> |
 
-|                          Portada                              |
-| :-----------------------------------------------------------: |
+|                                                           |
+| :-------------------------------------------------------: |
 | <img width="360" src="resources/screenshots/portada.png"> |
 
 </div>
@@ -134,5 +134,5 @@ bun run dev
 ---
 
 <div align="center">
-  <sub>Made with care by <a href="https://github.com/torrescereno">torrescereno</a></sub>
+  <sub>Made with ❤️ by <a href="https://github.com/torrescereno">torrescereno</a></sub>
 </div>
