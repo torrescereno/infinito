@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/torrescereno/infinito/compare/v1.1.0...v1.1.1) (2026-03-22)
+
+
+### Bug Fixes
+
+* build ([0beaed1](https://github.com/torrescereno/infinito/commit/0beaed1c85fdc16e513abf38fb55986cc2242cb5))
+
 ## [1.1.0](https://github.com/torrescereno/infinito/compare/v1.0.0...v1.1.0) (2026-03-22)
 
 
