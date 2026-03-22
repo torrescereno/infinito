@@ -28,7 +28,7 @@ export default function App(): React.JSX.Element {
     toggleCollapse
   } = useBlocks()
 
-  const { settings, setFontSize, setFontFamily, setCodeTheme } = useSettings()
+  const { settings, setFontSize, setFontFamily, setCodeTheme, setLigatures } = useSettings()
   const { updateInfo, checkForUpdates, restartNow, snoozeUpdate, dismissUpdate } = useUpdate()
 
   useEffect(() => {
@@ -81,6 +81,7 @@ export default function App(): React.JSX.Element {
                   onFontSize={setFontSize}
                   onFontFamily={setFontFamily}
                   onCodeTheme={setCodeTheme}
+                  onLigatures={setLigatures}
                   onCheckUpdate={checkForUpdates}
                   updateInfo={updateInfo}
                   version={version}

@@ -1,6 +1,15 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+/* Bundled fonts */
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource-variable/fira-code';
+@import '@fontsource/cascadia-code';
+@import '@fontsource/source-code-pro';
+@import '@fontsource/ibm-plex-mono';
+@import '@fontsource/geist-mono';
+
 @theme {
   --font-sans:
     'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
@@ -13,6 +22,8 @@
 :root {
   --app-font-size: 12px;
   --app-font-family: 'Inter', sans-serif;
+  --app-font-ligatures: none;
+  --app-font-features: "liga" 0, "calt" 0;
 }
 
 * {
@@ -26,6 +37,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-variant-ligatures: var(--app-font-ligatures);
 }
 
 /* Custom scrollbar */
@@ -68,8 +80,10 @@ code.hljs {
   padding: 0.75rem 1rem !important;
   overflow-x: auto;
   background-color: #18181b !important;
-  font-size: 11px;
+  font-size: var(--app-font-size);
   line-height: 1.6;
+  font-variant-ligatures: var(--app-font-ligatures);
+  font-feature-settings: var(--app-font-features);
 }
 
 /* Inline code */

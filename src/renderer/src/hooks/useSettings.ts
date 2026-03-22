@@ -25,7 +25,17 @@ function applyToDOM(settings: Settings): void {
   const font = FONT_FAMILIES.find((f) => f.id === settings.fontFamily)
   if (font) {
     root.style.setProperty('--app-font-family', font.value)
+    root.style.setProperty('--font-mono', font.value)
   }
+
+  root.style.setProperty(
+    '--app-font-ligatures',
+    settings.ligatures ? 'normal' : 'none'
+  )
+  root.style.setProperty(
+    '--app-font-features',
+    settings.ligatures ? '"liga" 1, "calt" 1' : '"liga" 0, "calt" 0'
+  )
 
   document.body.className = document.body.className.replace(/theme-[\w-]+/g, '').trim()
 
@@ -59,5 +69,9 @@ export function useSettings(): {
     setSettings((prev) => ({ ...prev, codeTheme }))
   }, [])
 
-  return { settings, setFontSize, setFontFamily, setCodeTheme }
+  const setLigatures = useCallback((ligatures: boolean) => {
+    setSettings((prev) => ({ ...prev, ligatures }))
+  }, [])
+
+  return { settings, setFontSize, setFontFamily, setCodeTheme, setLigatures }
 }
