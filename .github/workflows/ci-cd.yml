@@ -1,0 +1,233 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run linter
+        run: bun run lint
+
+      - name: Run typecheck
+        run: bun run typecheck
+
+      - name: Run tests
+        run: bun run test:run
+
+      - name: Check coverage (min 80%)
+        run: bun run test:coverage
+        env:
+          CI: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
+
+  release:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create release
+        uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  generate-metadata:
+    needs: release
+    if: needs.release.outputs.release_created
+    runs-on: ubuntu-latest
+    outputs:
+      priority: ${{ steps.detect.outputs.priority }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect update priority
+        id: detect
+        run: |
+          VERSION="${{ needs.release.outputs.tag_name }}"
+
+          COMMITS=$(git log --pretty=format:"%s" HEAD~20..HEAD 2>/dev/null || echo "")
+
+          PRIORITY="normal"
+          MESSAGE="Bug fixes and improvements"
+
+          if echo "$COMMITS" | grep -qiE "(security|cve|vulnerability|xss|injection|auth|exploit)"; then
+            if echo "$COMMITS" | grep -qiE "(critical|urgent|breaking)"; then
+              PRIORITY="critical"
+              MESSAGE="Critical security update"
+            else
+              PRIORITY="security"
+              MESSAGE="Security update"
+            fi
+          elif echo "$COMMITS" | grep -qiE "(critical|urgent|breaking)"; then
+            PRIORITY="critical"
+            MESSAGE="Critical update"
+          fi
+
+          echo "priority=$PRIORITY" >> $GITHUB_OUTPUT
+
+      - name: Create update metadata
+        run: |
+          VERSION="${{ needs.release.outputs.tag_name }}"
+          PRIORITY="${{ steps.detect.outputs.priority }}"
+
+          case "$PRIORITY" in
+            critical)
+              MESSAGE="Critical security update. Restart required."
+              FORCE_RESTART="true"
+              ;;
+            security)
+              MESSAGE="Security update. Please restart to apply."
+              FORCE_RESTART="false"
+              ;;
+            *)
+              MESSAGE="Bug fixes and improvements"
+              FORCE_RESTART="false"
+              ;;
+          esac
+
+          cat > update-metadata.json << EOF
+          {
+            "version": "${VERSION#v}",
+            "priority": "$PRIORITY",
+            "message": "$MESSAGE",
+            "forceRestart": $FORCE_RESTART,
+            "releaseDate": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
+
+          echo "Generated metadata:"
+          cat update-metadata.json
+
+      - name: Upload metadata to release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.release.outputs.tag_name }}
+          files: update-metadata.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-windows:
+    needs: [test, release]
+    if: needs.release.outputs.release_created
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build Windows
+        run: |
+          Remove-Item -Recurse -Force resources/migrations -ErrorAction SilentlyContinue
+          Copy-Item -Recurse src/database/migrations resources/migrations
+          bun run build
+          bunx electron-builder --win --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    needs: [test, release]
+    if: needs.release.outputs.release_created
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [arm64, x64]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build macOS (${{ matrix.arch }})
+        run: |
+          rm -rf resources/migrations
+          cp -r src/database/migrations resources/migrations
+          bun run build
+          bunx electron-builder --mac --${{ matrix.arch }} --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-linux:
+    needs: [test, release]
+    if: needs.release.outputs.release_created
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build Linux
+        run: |
+          rm -rf resources/migrations
+          cp -r src/database/migrations resources/migrations
+          bun run build
+          bunx electron-builder --linux --publish always
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -4,3 +4,17 @@ out
 .DS_Store
 .eslintcache
 *.log*
+*.tsbuildinfo
+build/icons/
+resources/migrations/
+
+# Test coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Test artifacts
+.vitest/
+vitest-results.json
+test-results/
+
