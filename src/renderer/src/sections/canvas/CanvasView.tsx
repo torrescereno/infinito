@@ -4,8 +4,10 @@ import { Excalidraw } from '@excalidraw/excalidraw'
 import '@excalidraw/excalidraw/index.css'
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
 import type { AppState } from '@excalidraw/excalidraw/types'
+import { useCanvasSessions } from '@renderer/hooks'
+import { CanvasSessionBar } from './CanvasSessionBar'
 
-const STORAGE_KEY = 'infinito-excalidraw'
+const CANVAS_PREFIX = 'infinito-canvas-'
 const DEBOUNCE_MS = 300
 
 interface PersistedData {
@@ -13,9 +15,9 @@ interface PersistedData {
   appState: Partial<AppState>
 }
 
-function loadSavedData(): PersistedData | null {
+function loadSessionData(sessionId: string): PersistedData | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(`${CANVAS_PREFIX}${sessionId}`)
     if (!raw) return null
     return JSON.parse(raw) as PersistedData
   } catch {
@@ -23,38 +25,34 @@ function loadSavedData(): PersistedData | null {
   }
 }
 
-export function CanvasView(): React.JSX.Element {
+function CanvasExcalidraw({ sessionId }: { sessionId: string }): React.JSX.Element {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [initial] = useState(loadSavedData)
+  const [initial] = useState(() => loadSessionData(sessionId))
 
-  const handleChange = useCallback((elements: readonly ExcalidrawElement[], appState: AppState) => {
-    if (timerRef.current) clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(() => {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          elements,
-          appState: {
-            theme: appState.theme,
-            viewBackgroundColor: appState.viewBackgroundColor,
-            zoom: appState.zoom,
-            scrollX: appState.scrollX,
-            scrollY: appState.scrollY
-          }
-        })
-      )
-    }, DEBOUNCE_MS)
-  }, [])
+  const handleChange = useCallback(
+    (elements: readonly ExcalidrawElement[], appState: AppState) => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => {
+        localStorage.setItem(
+          `${CANVAS_PREFIX}${sessionId}`,
+          JSON.stringify({
+            elements,
+            appState: {
+              theme: appState.theme,
+              viewBackgroundColor: appState.viewBackgroundColor,
+              zoom: appState.zoom,
+              scrollX: appState.scrollX,
+              scrollY: appState.scrollY
+            }
+          })
+        )
+      }, DEBOUNCE_MS)
+    },
+    [sessionId]
+  )
 
   return (
-    <motion.div
-      key="canvas"
-      initial={{ opacity: 0, y: 4 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -4 }}
-      transition={{ duration: 0.15 }}
-      className="excalidraw-wrapper"
-    >
+    <div className="flex-1 excalidraw-wrapper">
       <Excalidraw
         initialData={
           initial
@@ -79,6 +77,32 @@ export function CanvasView(): React.JSX.Element {
           }
         }}
       />
+    </div>
+  )
+}
+
+export function CanvasView(): React.JSX.Element {
+  const { sessions, activeSessionId, setActiveSession, createSession, deleteSession, renameSession } =
+    useCanvasSessions()
+
+  return (
+    <motion.div
+      key="canvas"
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -4 }}
+      transition={{ duration: 0.15 }}
+      className="flex flex-col h-full"
+    >
+      <CanvasSessionBar
+        sessions={sessions}
+        activeSessionId={activeSessionId}
+        onSelect={setActiveSession}
+        onCreate={createSession}
+        onDelete={deleteSession}
+        onRename={renameSession}
+      />
+      <CanvasExcalidraw key={activeSessionId} sessionId={activeSessionId} />
     </motion.div>
   )
 }

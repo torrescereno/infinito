@@ -40,6 +40,10 @@ body {
   font-variant-ligatures: var(--app-font-ligatures);
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;

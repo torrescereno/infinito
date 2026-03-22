@@ -81,7 +81,8 @@ describe('Settings type', () => {
     const settings: Settings = {
       fontSize: 14,
       fontFamily: 'jetbrains',
-      codeTheme: 'tokyo-night'
+      codeTheme: 'tokyo-night',
+      ligatures: false
     }
     expect(settings.fontSize).toBe(14)
     expect(settings.fontFamily).toBe('jetbrains')

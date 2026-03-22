@@ -49,6 +49,7 @@ export function useSettings(): {
   setFontSize: (size: FontSize) => void
   setFontFamily: (family: FontFamily) => void
   setCodeTheme: (theme: CodeTheme) => void
+  setLigatures: (ligatures: boolean) => void
 } {
   const [settings, setSettings] = useState<Settings>(loadSettings)
 
