@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion } from 'motion/react'
 import { Excalidraw } from '@excalidraw/excalidraw'
 import '@excalidraw/excalidraw/index.css'
@@ -9,6 +9,7 @@ import { CanvasSessionBar } from './CanvasSessionBar'
 
 const CANVAS_PREFIX = 'infinito-canvas-'
 const DEBOUNCE_MS = 300
+const TRANSITION_MS = 150
 
 interface PersistedData {
   elements: ExcalidrawElement[]
@@ -25,12 +26,23 @@ function loadSessionData(sessionId: string): PersistedData | null {
   }
 }
 
-function CanvasExcalidraw({ sessionId }: { sessionId: string }): React.JSX.Element {
+function CanvasExcalidraw({
+  sessionId,
+  onReady
+}: {
+  sessionId: string
+  onReady: () => void
+}): React.JSX.Element {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [initial] = useState(() => loadSessionData(sessionId))
+  const readyFired = useRef(false)
 
   const handleChange = useCallback(
     (elements: readonly ExcalidrawElement[], appState: AppState) => {
+      if (!readyFired.current) {
+        readyFired.current = true
+        onReady()
+      }
       if (timerRef.current) clearTimeout(timerRef.current)
       timerRef.current = setTimeout(() => {
         localStorage.setItem(
@@ -48,7 +60,7 @@ function CanvasExcalidraw({ sessionId }: { sessionId: string }): React.JSX.Eleme
         )
       }, DEBOUNCE_MS)
     },
-    [sessionId]
+    [sessionId, onReady]
   )
 
   return (
@@ -85,6 +97,30 @@ export function CanvasView(): React.JSX.Element {
   const { sessions, activeSessionId, setActiveSession, createSession, deleteSession, renameSession } =
     useCanvasSessions()
 
+  const [renderedSessionId, setRenderedSessionId] = useState(activeSessionId)
+  const [overlayVisible, setOverlayVisible] = useState(false)
+  const pendingSessionRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (activeSessionId === renderedSessionId) return
+
+    pendingSessionRef.current = activeSessionId
+    setOverlayVisible(true)
+
+    const timeout = setTimeout(() => {
+      setRenderedSessionId(activeSessionId)
+    }, TRANSITION_MS)
+
+    return () => clearTimeout(timeout)
+  }, [activeSessionId, renderedSessionId])
+
+  const handleExcalidrawReady = useCallback(() => {
+    setTimeout(() => {
+      setOverlayVisible(false)
+      pendingSessionRef.current = null
+    }, 80)
+  }, [])
+
   return (
     <motion.div
       key="canvas"
@@ -92,7 +128,7 @@ export function CanvasView(): React.JSX.Element {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -4 }}
       transition={{ duration: 0.15 }}
-      className="flex flex-col h-full"
+      className="relative flex flex-col h-full"
     >
       <CanvasSessionBar
         sessions={sessions}
@@ -102,7 +138,20 @@ export function CanvasView(): React.JSX.Element {
         onDelete={deleteSession}
         onRename={renameSession}
       />
-      <CanvasExcalidraw key={activeSessionId} sessionId={activeSessionId} />
+      <div className="relative flex-1">
+        <CanvasExcalidraw
+          key={renderedSessionId}
+          sessionId={renderedSessionId}
+          onReady={handleExcalidrawReady}
+        />
+        <div
+          className="absolute inset-0 bg-zinc-950 pointer-events-none transition-opacity"
+          style={{
+            opacity: overlayVisible ? 1 : 0,
+            transitionDuration: `${TRANSITION_MS}ms`
+          }}
+        />
+      </div>
     </motion.div>
   )
 }

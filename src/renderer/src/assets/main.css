@@ -36,3 +36,9 @@ body {
 .excalidraw svg {
   display: inline;
 }
+
+/* Hide Excalidraw's built-in "Loading scene..." screen */
+.excalidraw .LoadingMessage,
+.excalidraw .LoadingMessage--dark {
+  display: none !important;
+}

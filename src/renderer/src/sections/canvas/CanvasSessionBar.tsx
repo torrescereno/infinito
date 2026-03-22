@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Plus, X } from 'lucide-react'
 import { cn } from '@renderer/lib/utils'
 import type { CanvasSession } from '@renderer/types'
+import { ConfirmDialog } from './ConfirmDialog'
 
 interface CanvasSessionBarProps {
   sessions: CanvasSession[]
@@ -16,13 +17,13 @@ function SessionTab({
   session,
   isActive,
   onSelect,
-  onDelete,
+  onRequestDelete,
   onRename
 }: {
   session: CanvasSession
   isActive: boolean
   onSelect: () => void
-  onDelete: () => void
+  onRequestDelete: () => void
   onRename: (name: string) => void
 }): React.JSX.Element {
   const [editing, setEditing] = useState(false)
@@ -84,16 +85,12 @@ function SessionTab({
           tabIndex={-1}
           onClick={(e) => {
             e.stopPropagation()
-            if (window.confirm(`Delete "${session.name}"?`)) {
-              onDelete()
-            }
+            onRequestDelete()
           }}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.stopPropagation()
-              if (window.confirm(`Delete "${session.name}"?`)) {
-                onDelete()
-              }
+              onRequestDelete()
             }
           }}
           className="hidden group-hover:flex items-center justify-center w-3 h-3 rounded-sm text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700"
@@ -113,26 +110,52 @@ export function CanvasSessionBar({
   onDelete,
   onRename
 }: CanvasSessionBarProps): React.JSX.Element {
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+
+  const pendingSession = pendingDeleteId
+    ? sessions.find((s) => s.id === pendingDeleteId)
+    : null
+
+  const handleConfirmDelete = useCallback(() => {
+    if (pendingDeleteId) {
+      onDelete(pendingDeleteId)
+      setPendingDeleteId(null)
+    }
+  }, [pendingDeleteId, onDelete])
+
+  const handleCancelDelete = useCallback(() => {
+    setPendingDeleteId(null)
+  }, [])
+
   return (
-    <div className="flex items-center gap-0.5 h-7 px-2 bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800/30 overflow-x-auto scrollbar-hide">
-      {sessions.map((session) => (
-        <SessionTab
-          key={session.id}
-          session={session}
-          isActive={session.id === activeSessionId}
-          onSelect={() => onSelect(session.id)}
-          onDelete={() => onDelete(session.id)}
-          onRename={(name) => onRename(session.id, name)}
-        />
-      ))}
-      <button
-        type="button"
-        onClick={onCreate}
-        className="flex items-center justify-center h-5 w-5 shrink-0 rounded-sm text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
-        title="New canvas"
-      >
-        <Plus className="w-3 h-3" />
-      </button>
-    </div>
+    <>
+      <div className="flex items-center gap-0.5 h-7 px-2 bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800/30 overflow-x-auto scrollbar-hide">
+        {sessions.map((session) => (
+          <SessionTab
+            key={session.id}
+            session={session}
+            isActive={session.id === activeSessionId}
+            onSelect={() => onSelect(session.id)}
+            onRequestDelete={() => setPendingDeleteId(session.id)}
+            onRename={(name) => onRename(session.id, name)}
+          />
+        ))}
+        <button
+          type="button"
+          onClick={onCreate}
+          className="flex items-center justify-center h-5 w-5 shrink-0 rounded-sm text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
+          title="New canvas"
+        >
+          <Plus className="w-3 h-3" />
+        </button>
+      </div>
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        title={`Delete "${pendingSession?.name ?? ''}"?`}
+        description="This canvas and all its content will be permanently deleted."
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
+    </>
   )
 }
