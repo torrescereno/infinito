@@ -53,6 +53,24 @@
 | **Local Storage** | Private data stored locally, no internet required           |
 |                   | SQLite database with offline-first design                   |
 
+## Screenshots
+
+<div align="center">
+
+|                          Notes View                           |                          Canvas View                          |
+| :-----------------------------------------------------------: | :-----------------------------------------------------------: |
+| <img width="360" src="resources/screenshots/notes.png"> | <img width="360" src="resources/screenshots/canvas.png"> |
+
+|                          Config View                          |                          Index View                           |
+| :-----------------------------------------------------------: | :-----------------------------------------------------------: |
+| <img width="360" src="resources/screenshots/config.png"> | <img width="360" src="resources/screenshots/index.png"> |
+
+|                          Portada                              |
+| :-----------------------------------------------------------: |
+| <img width="360" src="resources/screenshots/portada.png"> |
+
+</div>
+
 ## Installation
 
 ### Downloads
