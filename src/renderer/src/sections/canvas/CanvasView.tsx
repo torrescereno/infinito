@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { motion } from 'motion/react'
 import { Excalidraw } from '@excalidraw/excalidraw'
 import '@excalidraw/excalidraw/index.css'
@@ -102,20 +102,31 @@ function CanvasExcalidraw({
 }
 
 export function CanvasView(): React.JSX.Element {
-  const { sessions, activeSessionId, setActiveSession, createSession, deleteSession, renameSession } =
-    useCanvasSessions()
+  const {
+    sessions,
+    activeSessionId,
+    setActiveSession,
+    createSession,
+    deleteSession,
+    renameSession
+  } = useCanvasSessions()
 
   const [renderedSessionId, setRenderedSessionId] = useState(activeSessionId)
-  const [overlayVisible, setOverlayVisible] = useState(false)
+  const [excalidrawReady, setExcalidrawReady] = useState(true)
   const pendingSessionRef = useRef<string | null>(null)
+
+  const overlayVisible = useMemo(
+    () => activeSessionId !== renderedSessionId || !excalidrawReady,
+    [activeSessionId, renderedSessionId, excalidrawReady]
+  )
 
   useEffect(() => {
     if (activeSessionId === renderedSessionId) return
 
     pendingSessionRef.current = activeSessionId
-    setOverlayVisible(true)
 
     const timeout = setTimeout(() => {
+      setExcalidrawReady(false)
       setRenderedSessionId(activeSessionId)
     }, TRANSITION_MS)
 
@@ -124,7 +135,7 @@ export function CanvasView(): React.JSX.Element {
 
   const handleExcalidrawReady = useCallback(() => {
     setTimeout(() => {
-      setOverlayVisible(false)
+      setExcalidrawReady(true)
       pendingSessionRef.current = null
     }, 80)
   }, [])

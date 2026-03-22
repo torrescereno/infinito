@@ -44,7 +44,6 @@ export default function App(): React.JSX.Element {
     setIsPinned(pinned)
   }
 
-
   if (!loaded) {
     return (
       <div className="flex h-screen items-center justify-center bg-zinc-950 rounded-lg overflow-hidden" />

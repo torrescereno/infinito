@@ -28,10 +28,7 @@ function applyToDOM(settings: Settings): void {
     root.style.setProperty('--font-mono', font.value)
   }
 
-  root.style.setProperty(
-    '--app-font-ligatures',
-    settings.ligatures ? 'normal' : 'none'
-  )
+  root.style.setProperty('--app-font-ligatures', settings.ligatures ? 'normal' : 'none')
   root.style.setProperty(
     '--app-font-features',
     settings.ligatures ? '"liga" 1, "calt" 1' : '"liga" 0, "calt" 0'

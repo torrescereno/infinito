@@ -112,9 +112,7 @@ export function CanvasSessionBar({
 }: CanvasSessionBarProps): React.JSX.Element {
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
 
-  const pendingSession = pendingDeleteId
-    ? sessions.find((s) => s.id === pendingDeleteId)
-    : null
+  const pendingSession = pendingDeleteId ? sessions.find((s) => s.id === pendingDeleteId) : null
 
   const handleConfirmDelete = useCallback(() => {
     if (pendingDeleteId) {

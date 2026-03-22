@@ -195,9 +195,7 @@ export function ConfigView({
 
       {/* About */}
       <div className="rounded-xl bg-zinc-900/40 border border-zinc-800/30 p-4 space-y-4">
-        <h2 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">
-          About
-        </h2>
+        <h2 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">About</h2>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">

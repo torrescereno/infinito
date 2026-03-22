@@ -71,9 +71,7 @@ export function NotesView({
           No blocks yet. Add a block to start.
         </p>
       ) : filteredGroups.length === 0 && isActive ? (
-        <p className="text-zinc-600 text-xs text-center py-12">
-          No matching notes found.
-        </p>
+        <p className="text-zinc-600 text-xs text-center py-12">No matching notes found.</p>
       ) : (
         filteredGroups.map((group) => {
           if (group.dateBlock) {

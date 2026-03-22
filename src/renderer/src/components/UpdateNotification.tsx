@@ -96,8 +96,7 @@ function BannerContent({
   const isSecurity = updateInfo.priority === 'security'
   const isDownloaded = updateInfo.downloaded === true
   const isManualDownload = updateInfo.manualDownload === true
-  const isDownloading =
-    !isDownloaded && !isManualDownload && (updateInfo.progress ?? 0) > 0
+  const isDownloading = !isDownloaded && !isManualDownload && (updateInfo.progress ?? 0) > 0
   const progress = updateInfo.progress ?? 0
 
   if (isCritical) {
@@ -282,9 +281,7 @@ function BannerContent({
           Restart
         </Button>
       ) : isDownloading ? (
-        <span className="text-[11px] text-zinc-500 font-mono">
-          Downloading... {progress}%
-        </span>
+        <span className="text-[11px] text-zinc-500 font-mono">Downloading... {progress}%</span>
       ) : null}
     </div>
   )

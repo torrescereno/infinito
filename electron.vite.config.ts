@@ -6,9 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import type { Plugin } from 'vite'
 
-const EXCALIDRAW_FONTS_DIR = resolve(
-  'node_modules/@excalidraw/excalidraw/dist/prod/fonts'
-)
+const EXCALIDRAW_FONTS_DIR = resolve('node_modules/@excalidraw/excalidraw/dist/prod/fonts')
 
 function excalidrawFontsPlugin(): Plugin {
   return {
@@ -57,10 +55,6 @@ export default defineConfig({
         '@renderer': resolve('src/renderer/src')
       }
     },
-    plugins: [
-      tailwindcss(),
-      react(),
-      excalidrawFontsPlugin()
-    ]
+    plugins: [tailwindcss(), react(), excalidrawFontsPlugin()]
   }
 })
