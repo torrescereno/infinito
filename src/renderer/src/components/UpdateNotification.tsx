@@ -96,16 +96,19 @@ function BannerContent({
   const isSecurity = updateInfo.priority === 'security'
   const isDownloaded = updateInfo.downloaded === true
   const isManualDownload = updateInfo.manualDownload === true
+  const isDownloading =
+    !isDownloaded && !isManualDownload && (updateInfo.progress ?? 0) > 0
+  const progress = updateInfo.progress ?? 0
 
   if (isCritical) {
     const minutes = Math.floor(countdown / 60)
     const seconds = countdown % 60
 
     return (
-      <div className="flex flex-col gap-1.5 rounded-lg bg-red-950/40 border border-red-900/30 px-3 py-2.5">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-1.5 rounded-lg bg-red-950/90 backdrop-blur-md border border-red-900/30 px-3 py-2">
+        <div className="flex items-center gap-1.5">
           <svg
-            className="h-4 w-4 shrink-0 text-red-400"
+            className="h-3.5 w-3.5 shrink-0 text-red-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -118,9 +121,9 @@ function BannerContent({
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
             />
           </svg>
-          <span className="flex-1 text-xs font-medium text-red-300">Critical update</span>
+          <span className="flex-1 text-[11px] font-medium text-red-200">Critical update</span>
           {!isManualDownload && (
-            <span className="font-mono text-[10px] text-red-400/60">
+            <span className="rounded-full bg-red-900/60 px-2 py-0.5 font-mono text-[10px] font-bold text-red-300">
               {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
             </span>
           )}
@@ -133,7 +136,7 @@ function BannerContent({
                 variant="ghost"
                 size="sm"
                 onClick={onDismiss}
-                className="flex-1 rounded-md text-red-400/60 hover:text-red-300 text-[10px]"
+                className="flex-1 h-6 rounded-sm text-red-400/60 hover:text-red-300 text-[11px]"
               >
                 Later
               </Button>
@@ -141,7 +144,7 @@ function BannerContent({
                 variant="ghost"
                 size="sm"
                 onClick={onDownload}
-                className="flex-1 rounded-md bg-red-900/50 text-red-200 hover:bg-red-900/70 text-[10px]"
+                className="flex-1 h-6 rounded-sm bg-red-900/50 text-red-200 hover:bg-red-900/70 text-[11px]"
               >
                 Download
               </Button>
@@ -152,7 +155,7 @@ function BannerContent({
                 variant="ghost"
                 size="sm"
                 onClick={onSnooze}
-                className="flex-1 rounded-md text-red-400/60 hover:text-red-300 text-[10px]"
+                className="flex-1 h-6 rounded-sm text-red-400/60 hover:text-red-300 text-[11px]"
               >
                 5 min
               </Button>
@@ -161,9 +164,9 @@ function BannerContent({
                 size="sm"
                 onClick={onRestart}
                 disabled={!isDownloaded}
-                className="flex-1 rounded-md bg-red-900/50 text-red-200 hover:bg-red-900/70 text-[10px]"
+                className="flex-1 h-6 rounded-sm bg-red-900/50 text-red-200 hover:bg-red-900/70 text-[11px]"
               >
-                {isDownloaded ? 'Restart' : 'Downloading...'}
+                {isDownloaded ? 'Restart' : `Downloading... ${progress}%`}
               </Button>
             </>
           )}
@@ -174,9 +177,9 @@ function BannerContent({
 
   if (isSecurity) {
     return (
-      <div className="flex items-center gap-3 rounded-lg bg-orange-950/40 border border-orange-900/30 px-3 py-2.5 text-xs">
+      <div className="flex items-center gap-2 rounded-lg bg-orange-950/90 backdrop-blur-md border border-orange-900/30 px-3 py-2 text-[11px]">
         <svg
-          className="h-4 w-4 shrink-0 text-orange-400"
+          className="h-3.5 w-3.5 shrink-0 text-orange-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -190,7 +193,7 @@ function BannerContent({
           />
         </svg>
 
-        <span className="flex-1 text-orange-300">
+        <span className="flex-1 text-orange-200">
           Security update
           {updateInfo.version && <span className="text-orange-400/60"> v{updateInfo.version}</span>}
         </span>
@@ -199,7 +202,7 @@ function BannerContent({
           variant="ghost"
           size="sm"
           onClick={onDismiss}
-          className="rounded-md text-orange-800 hover:text-orange-400 text-[10px]"
+          className="h-6 rounded-sm text-orange-400/50 hover:text-orange-300 text-[11px]"
         >
           Later
         </Button>
@@ -208,30 +211,32 @@ function BannerContent({
             variant="ghost"
             size="sm"
             onClick={onDownload}
-            className="rounded-md bg-orange-900/50 text-orange-200 hover:bg-orange-900/70 text-[10px]"
+            className="h-6 rounded-sm bg-orange-900/50 text-orange-200 hover:bg-orange-900/70 text-[11px]"
           >
             Download
           </Button>
-        ) : (
-          isDownloaded && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onRestart}
-              className="rounded-md bg-orange-900/50 text-orange-200 hover:bg-orange-900/70 text-[10px]"
-            >
-              Restart
-            </Button>
-          )
-        )}
+        ) : isDownloaded ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onRestart}
+            className="h-6 rounded-sm bg-orange-900/50 text-orange-200 hover:bg-orange-900/70 text-[11px]"
+          >
+            Restart
+          </Button>
+        ) : isDownloading ? (
+          <span className="text-[11px] text-orange-400/60 font-mono">
+            Downloading... {progress}%
+          </span>
+        ) : null}
       </div>
     )
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-lg bg-zinc-900/60 border border-zinc-800/50 px-3 py-2.5 text-xs">
+    <div className="flex items-center gap-2 rounded-lg bg-zinc-900/90 backdrop-blur-md border border-zinc-800/50 px-3 py-2 text-[11px]">
       <svg
-        className="h-4 w-4 shrink-0 text-zinc-400"
+        className="h-3.5 w-3.5 shrink-0 text-zinc-400"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -254,7 +259,7 @@ function BannerContent({
         variant="ghost"
         size="sm"
         onClick={onDismiss}
-        className="text-zinc-600 hover:text-zinc-400 text-[10px] rounded-md"
+        className="h-6 text-zinc-600 hover:text-zinc-400 text-[11px] rounded-sm"
       >
         Skip
       </Button>
@@ -263,22 +268,24 @@ function BannerContent({
           variant="ghost"
           size="sm"
           onClick={onDownload}
-          className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-[10px] rounded-md"
+          className="h-6 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-[11px] rounded-sm"
         >
           Download
         </Button>
-      ) : (
-        isDownloaded && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onRestart}
-            className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-[10px] rounded-md"
-          >
-            Restart
-          </Button>
-        )
-      )}
+      ) : isDownloaded ? (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onRestart}
+          className="h-6 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-[11px] rounded-sm"
+        >
+          Restart
+        </Button>
+      ) : isDownloading ? (
+        <span className="text-[11px] text-zinc-500 font-mono">
+          Downloading... {progress}%
+        </span>
+      ) : null}
     </div>
   )
 }

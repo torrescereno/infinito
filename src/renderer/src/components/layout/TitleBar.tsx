@@ -36,17 +36,6 @@ export function TitleBar({
 
       <div className="no-drag flex items-center bg-zinc-900/40 p-0.5 rounded-md border border-zinc-800/30">
         <Button
-          variant={view === 'index' ? 'secondary' : 'ghost'}
-          size="sm"
-          onClick={() => onViewChange('index')}
-          className={cn(
-            'h-6 px-2.5 text-[11px] rounded-sm',
-            view === 'index' ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 hover:text-zinc-300'
-          )}
-        >
-          index
-        </Button>
-        <Button
           variant={view === 'notes' ? 'secondary' : 'ghost'}
           size="sm"
           onClick={() => onViewChange('notes')}
