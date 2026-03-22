@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.7](https://github.com/torrescereno/infinito/compare/v1.1.6...v1.1.7) (2026-03-22)
+
+
+### Bug Fixes
+
+* cambio de escalado de iconos ([493da7e](https://github.com/torrescereno/infinito/commit/493da7e2ed2cf5e6e6138d30a48b5e9b3aeba674))
+
 ## [1.1.6](https://github.com/torrescereno/infinito/compare/v1.1.5...v1.1.6) (2026-03-22)
 
 
