@@ -1,64 +1,63 @@
 # Changelog
 
-## [1.2.2](https://github.com/torrescereno/infinito/compare/v1.2.1...v1.2.2) (2026-03-23)
-
-
-### Bug Fixes
-
-* actualizacion en windows ([5f3b7ec](https://github.com/torrescereno/infinito/commit/5f3b7ec6a419c22b5e20a64b0653168af3fa61b0))
-* archivo changelog y ci-cd ([49d557a](https://github.com/torrescereno/infinito/commit/49d557a023aed4c0d97fc6d0653e1927fd17ac13))
-* ci cd ([ba33af6](https://github.com/torrescereno/infinito/commit/ba33af67a7ea89b02e653257243f79416b5360f1))
-
-## [1.2.1](https://github.com/torrescereno/infinito/compare/v1.2.0...v1.2.1) (2026-03-23)
-
-
-### Bug Fixes
-
-* actualizacion win y mac ([4c48d87](https://github.com/torrescereno/infinito/commit/4c48d87a7500ddcca121e51ce7137c977ed583c1))
-
-## [1.2.0](https://github.com/torrescereno/infinito/compare/v1.1.7...v1.2.0) (2026-03-23)
-
+## [1.3.0](https://github.com/torrescereno/infinito/compare/v1.2.2...v1.3.0) (2026-03-23)
 
 ### Features
 
-* nueva vista de config ([f93d417](https://github.com/torrescereno/infinito/commit/f93d4171be37d051634bfd1915f4e5bfbc53ef90))
-* nuevo estilo de ventana emergente y mejora en el cambio de tabs ([0ee0d94](https://github.com/torrescereno/infinito/commit/0ee0d94e94913339d32cdd46f3814c85b6dbe308))
-* permite eliminar una tarea ([ddde1c0](https://github.com/torrescereno/infinito/commit/ddde1c032514cf76fe91a647ef6b5a160cd96831))
-* se agregan mas fuentes y temas ([b5f1ffb](https://github.com/torrescereno/infinito/commit/b5f1ffbc2e0455347cc10a567ba1bca96f9c8407))
-* se agregan tabs en canvas ([a442384](https://github.com/torrescereno/infinito/commit/a4423848b48ace1d83494241bd00297d56a26364))
-* se agregan test ([d8fa574](https://github.com/torrescereno/infinito/commit/d8fa574152fc46ea46a1bdf9b6b226c437061e3d))
-* se agregan test useBlocks ([42b67aa](https://github.com/torrescereno/infinito/commit/42b67aab7272fcf3024f90a4b0cdb892efcb879d))
-* se cambia canvas por excalidraw ([eb29c3e](https://github.com/torrescereno/infinito/commit/eb29c3e2fd6555d0008409a1308eeae7bc6bfa95))
-* se mojora la ui de notificacion de actualizacion ([4e90894](https://github.com/torrescereno/infinito/commit/4e9089483354ee8580d4f480869493baf81b1780))
-* se quita index y se agrega filtro de busqueda ([432a065](https://github.com/torrescereno/infinito/commit/432a0653b2830274bac62116edb1de1210fbb320))
-* soporte de ligaturas ([ea4457f](https://github.com/torrescereno/infinito/commit/ea4457f82b061bed1d8c9d05c3c4797a323db074))
+- selector de texto en tabs ([a5d6a36](https://github.com/torrescereno/infinito/commit/a5d6a36e63e0e0c7fb7c6ef05c7ae3bb5989ac8e))
 
+## [1.2.2](https://github.com/torrescereno/infinito/compare/v1.2.1...v1.2.2) (2026-03-23)
 
 ### Bug Fixes
 
-* ci/cd ([eea689c](https://github.com/torrescereno/infinito/commit/eea689c4ef1a8270324b1d973fca3d287fa58e64))
-* fonts en excalidraw ([864846a](https://github.com/torrescereno/infinito/commit/864846a032c28fd0e9a6ec99af8130e29a89b2ce))
+- actualizacion en windows ([5f3b7ec](https://github.com/torrescereno/infinito/commit/5f3b7ec6a419c22b5e20a64b0653168af3fa61b0))
+- archivo changelog y ci-cd ([49d557a](https://github.com/torrescereno/infinito/commit/49d557a023aed4c0d97fc6d0653e1927fd17ac13))
+- ci cd ([ba33af6](https://github.com/torrescereno/infinito/commit/ba33af67a7ea89b02e653257243f79416b5360f1))
+
+## [1.2.1](https://github.com/torrescereno/infinito/compare/v1.2.0...v1.2.1) (2026-03-23)
+
+### Bug Fixes
+
+- actualizacion win y mac ([4c48d87](https://github.com/torrescereno/infinito/commit/4c48d87a7500ddcca121e51ce7137c977ed583c1))
+
+## [1.2.0](https://github.com/torrescereno/infinito/compare/v1.1.7...v1.2.0) (2026-03-23)
+
+### Features
+
+- nueva vista de config ([f93d417](https://github.com/torrescereno/infinito/commit/f93d4171be37d051634bfd1915f4e5bfbc53ef90))
+- nuevo estilo de ventana emergente y mejora en el cambio de tabs ([0ee0d94](https://github.com/torrescereno/infinito/commit/0ee0d94e94913339d32cdd46f3814c85b6dbe308))
+- permite eliminar una tarea ([ddde1c0](https://github.com/torrescereno/infinito/commit/ddde1c032514cf76fe91a647ef6b5a160cd96831))
+- se agregan mas fuentes y temas ([b5f1ffb](https://github.com/torrescereno/infinito/commit/b5f1ffbc2e0455347cc10a567ba1bca96f9c8407))
+- se agregan tabs en canvas ([a442384](https://github.com/torrescereno/infinito/commit/a4423848b48ace1d83494241bd00297d56a26364))
+- se agregan test ([d8fa574](https://github.com/torrescereno/infinito/commit/d8fa574152fc46ea46a1bdf9b6b226c437061e3d))
+- se agregan test useBlocks ([42b67aa](https://github.com/torrescereno/infinito/commit/42b67aab7272fcf3024f90a4b0cdb892efcb879d))
+- se cambia canvas por excalidraw ([eb29c3e](https://github.com/torrescereno/infinito/commit/eb29c3e2fd6555d0008409a1308eeae7bc6bfa95))
+- se mojora la ui de notificacion de actualizacion ([4e90894](https://github.com/torrescereno/infinito/commit/4e9089483354ee8580d4f480869493baf81b1780))
+- se quita index y se agrega filtro de busqueda ([432a065](https://github.com/torrescereno/infinito/commit/432a0653b2830274bac62116edb1de1210fbb320))
+- soporte de ligaturas ([ea4457f](https://github.com/torrescereno/infinito/commit/ea4457f82b061bed1d8c9d05c3c4797a323db074))
+
+### Bug Fixes
+
+- ci/cd ([eea689c](https://github.com/torrescereno/infinito/commit/eea689c4ef1a8270324b1d973fca3d287fa58e64))
+- fonts en excalidraw ([864846a](https://github.com/torrescereno/infinito/commit/864846a032c28fd0e9a6ec99af8130e29a89b2ce))
 
 ## [1.1.7](https://github.com/torrescereno/infinito/compare/v1.1.6...v1.1.7) (2026-03-22)
 
-
 ### Bug Fixes
 
-* cambio de escalado de iconos ([493da7e](https://github.com/torrescereno/infinito/commit/493da7e2ed2cf5e6e6138d30a48b5e9b3aeba674))
+- cambio de escalado de iconos ([493da7e](https://github.com/torrescereno/infinito/commit/493da7e2ed2cf5e6e6138d30a48b5e9b3aeba674))
 
 ## [1.1.6](https://github.com/torrescereno/infinito/compare/v1.1.5...v1.1.6) (2026-03-22)
 
-
 ### Bug Fixes
 
-* ci / cd ([191c9f2](https://github.com/torrescereno/infinito/commit/191c9f241fab04b7980aa5ee5c0f49eba2d703c7))
+- ci / cd ([191c9f2](https://github.com/torrescereno/infinito/commit/191c9f241fab04b7980aa5ee5c0f49eba2d703c7))
 
 ## [1.1.5](https://github.com/torrescereno/infinito/compare/v1.1.4...v1.1.5) (2026-03-22)
 
-
 ### Bug Fixes
 
-* windows build ([868ffb2](https://github.com/torrescereno/infinito/commit/868ffb2d31fd76de96c8e797de689c181e28e963))
+- windows build ([868ffb2](https://github.com/torrescereno/infinito/commit/868ffb2d31fd76de96c8e797de689c181e28e963))
 
 ## [1.1.4](https://github.com/torrescereno/infinito/compare/v1.1.3...v1.1.4) (2026-03-22)
 
