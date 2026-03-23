@@ -21,7 +21,7 @@ win:
   icon: build/icons/win/icon.ico
   executableName: infinito
   target:
-    - msi
+    - nsis
 mac:
   icon: build/icons/mac/icon.icns
   entitlementsInherit: build/entitlements.mac.plist

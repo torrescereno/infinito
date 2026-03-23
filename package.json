@@ -45,6 +45,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.1",
+    "electron-dl": "^4.0.0",
     "electron-store": "^8.2.0",
     "electron-updater": "^6.3.9",
     "lucide-react": "^0.577.0",

@@ -26,8 +26,6 @@ export function UpdateNotification({
   }, [updateInfo])
 
   useEffect(() => {
-    if (!updateInfo?.available || updateInfo.priority !== 'critical') return
-
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -46,6 +44,11 @@ export function UpdateNotification({
 
   const handleDownload = (): void => {
     window.api?.openExternal(RELEASE_URL)
+    onDismiss()
+  }
+
+  const handleOpenDMG = async (): Promise<void> => {
+    await window.api?.update.openDMG()
     onDismiss()
   }
 
@@ -68,6 +71,7 @@ export function UpdateNotification({
             onSnooze={onSnooze}
             onDismiss={onDismiss}
             onDownload={handleDownload}
+            onOpenDMG={handleOpenDMG}
           />
         </motion.div>
       )}
@@ -82,6 +86,7 @@ interface BannerContentProps {
   onSnooze: () => void
   onDismiss: () => void
   onDownload: () => void
+  onOpenDMG: () => void
 }
 
 function BannerContent({
@@ -90,7 +95,8 @@ function BannerContent({
   onRestart,
   onSnooze,
   onDismiss,
-  onDownload
+  onDownload,
+  onOpenDMG
 }: BannerContentProps): React.JSX.Element {
   const isCritical = updateInfo.priority === 'critical'
   const isSecurity = updateInfo.priority === 'security'
@@ -98,6 +104,9 @@ function BannerContent({
   const isManualDownload = updateInfo.manualDownload === true
   const isDownloading = !isDownloaded && !isManualDownload && (updateInfo.progress ?? 0) > 0
   const progress = updateInfo.progress ?? 0
+  const dmgDownloaded = updateInfo.dmgDownloaded === true
+  const dmgProgress = updateInfo.dmgDownloadProgress ?? 0
+  const isDownloadingDMG = isManualDownload && !dmgDownloaded && dmgProgress > 0
 
   if (isCritical) {
     const minutes = Math.floor(countdown / 60)
@@ -121,7 +130,7 @@ function BannerContent({
             />
           </svg>
           <span className="flex-1 text-[11px] font-medium text-red-200">Critical update</span>
-          {!isManualDownload && (
+          {!isManualDownload && !dmgDownloaded && (
             <span className="rounded-full bg-red-900/60 px-2 py-0.5 font-mono text-[10px] font-bold text-red-300">
               {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
             </span>
@@ -131,22 +140,49 @@ function BannerContent({
         <div className="flex gap-1.5">
           {isManualDownload ? (
             <>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onDismiss}
-                className="flex-1 h-6 rounded-sm text-red-400/60 hover:text-red-300 text-[11px]"
-              >
-                Later
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onDownload}
-                className="flex-1 h-6 rounded-sm bg-red-900/50 text-red-200 hover:bg-red-900/70 text-[11px]"
-              >
-                Download
-              </Button>
+              {dmgDownloaded ? (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onDismiss}
+                    className="flex-1 h-6 rounded-sm text-red-400/60 hover:text-red-300 text-[11px]"
+                  >
+                    Later
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onOpenDMG}
+                    className="flex-1 h-6 rounded-sm bg-red-900/50 text-red-200 hover:bg-red-900/70 text-[11px]"
+                  >
+                    Open DMG
+                  </Button>
+                </>
+              ) : isDownloadingDMG ? (
+                <span className="flex-1 text-center text-[11px] text-red-300 font-mono">
+                  Downloading DMG... {dmgProgress}%
+                </span>
+              ) : (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onDismiss}
+                    className="flex-1 h-6 rounded-sm text-red-400/60 hover:text-red-300 text-[11px]"
+                  >
+                    Later
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onDownload}
+                    className="flex-1 h-6 rounded-sm bg-red-900/50 text-red-200 hover:bg-red-900/70 text-[11px]"
+                  >
+                    Download
+                  </Button>
+                </>
+              )}
             </>
           ) : (
             <>
@@ -206,14 +242,27 @@ function BannerContent({
           Later
         </Button>
         {isManualDownload ? (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onDownload}
-            className="h-6 rounded-sm bg-orange-900/50 text-orange-200 hover:bg-orange-900/70 text-[11px]"
-          >
-            Download
-          </Button>
+          dmgDownloaded ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onOpenDMG}
+              className="h-6 rounded-sm bg-orange-900/50 text-orange-200 hover:bg-orange-900/70 text-[11px]"
+            >
+              Open DMG
+            </Button>
+          ) : isDownloadingDMG ? (
+            <span className="text-[11px] text-orange-400/60 font-mono">DMG... {dmgProgress}%</span>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onDownload}
+              className="h-6 rounded-sm bg-orange-900/50 text-orange-200 hover:bg-orange-900/70 text-[11px]"
+            >
+              Download
+            </Button>
+          )
         ) : isDownloaded ? (
           <Button
             variant="ghost"
@@ -263,14 +312,27 @@ function BannerContent({
         Skip
       </Button>
       {isManualDownload ? (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onDownload}
-          className="h-6 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-[11px] rounded-sm"
-        >
-          Download
-        </Button>
+        dmgDownloaded ? (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onOpenDMG}
+            className="h-6 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-[11px] rounded-sm"
+          >
+            Open DMG
+          </Button>
+        ) : isDownloadingDMG ? (
+          <span className="text-[11px] text-zinc-500 font-mono">DMG... {dmgProgress}%</span>
+        ) : (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onDownload}
+            className="h-6 bg-zinc-800 text-zinc-300 hover:bg-zinc-700 text-[11px] rounded-sm"
+          >
+            Download
+          </Button>
+        )
       ) : isDownloaded ? (
         <Button
           variant="ghost"

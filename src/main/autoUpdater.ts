@@ -1,5 +1,6 @@
-import { dialog, shell, BrowserWindow } from 'electron'
+import { dialog, shell, BrowserWindow, app } from 'electron'
 import { autoUpdater } from 'electron-updater'
+import { download } from 'electron-dl'
 import { is } from '@electron-toolkit/utils'
 import type Store from 'electron-store'
 import type { StoreSchema } from './index'
@@ -9,8 +10,8 @@ const RELEASE_URL = 'https://github.com/torrescereno/infinito/releases/latest'
 const METADATA_URL =
   'https://github.com/torrescereno/infinito/releases/latest/download/update-metadata.json'
 
+const isWindows = process.platform === 'win32'
 const isMacOS = process.platform === 'darwin'
-const canAutoUpdate = process.platform !== 'linux' || !!process.env.APPIMAGE
 
 const POLL_INTERVALS = {
   normal: 60 * 60 * 1000,
@@ -36,20 +37,18 @@ export function setupAutoUpdater(mainWindow: BrowserWindow, store: Store<StoreSc
   autoUpdater.autoInstallOnAppQuit = false
 
   autoUpdater.on('update-available', (info) => {
-    if (!canAutoUpdate) {
-      showLinuxManualUpdateDialog(info.version)
-      return
-    }
-
+    console.log('[AutoUpdater] Update available:', info.version)
     handleUpdateAvailable(info.version)
   })
 
   autoUpdater.on('update-not-available', () => {
+    console.log('[AutoUpdater] No updates available')
     sendUpdateStatus({ available: false })
   })
 
   autoUpdater.on('download-progress', (progress) => {
     const percent = Math.round(progress.percent)
+    console.log('[AutoUpdater] Download progress:', percent + '%')
     sendUpdateStatus({
       ...lastStatus,
       progress: percent,
@@ -58,6 +57,7 @@ export function setupAutoUpdater(mainWindow: BrowserWindow, store: Store<StoreSc
   })
 
   autoUpdater.on('update-downloaded', () => {
+    console.log('[AutoUpdater] Update downloaded')
     updateDownloaded = true
 
     const pending: PendingUpdate = {
@@ -75,7 +75,7 @@ export function setupAutoUpdater(mainWindow: BrowserWindow, store: Store<StoreSc
   })
 
   autoUpdater.on('error', (error) => {
-    console.error('Auto-updater error:', error.message)
+    console.error('[AutoUpdater] Error:', error.message)
     sendUpdateStatus({ available: false })
   })
 }
@@ -107,6 +107,8 @@ export function checkPendingUpdate(): void {
 }
 
 async function handleUpdateAvailable(version: string): Promise<void> {
+  console.log('[AutoUpdater] Handling update available for version:', version)
+
   const metadata = await fetchUpdateMetadata()
   const priority = metadata?.priority || 'normal'
   const previousPriority = lastPriority
@@ -127,39 +129,79 @@ async function handleUpdateAvailable(version: string): Promise<void> {
   sendUpdateStatus(lastStatus)
 
   if (isMacOS) {
-    showMacOSManualUpdateDialog(version, priority)
+    downloadDMG(version, priority)
     return
   }
 
-  autoUpdater.downloadUpdate()
+  if (isWindows) {
+    console.log('[AutoUpdater] Starting Windows update download')
+    autoUpdater.downloadUpdate()
+  }
 
   if (previousPriority !== priority && checkInterval) {
     startPolling()
   }
 }
 
-async function fetchUpdateMetadata(): Promise<UpdateMetadata | null> {
+async function downloadDMG(version: string, priority: UpdatePriority): Promise<void> {
+  if (!mainWindowRef || mainWindowRef.isDestroyed()) return
+
   try {
-    const response = await fetch(METADATA_URL)
-    if (!response.ok) return null
-    return await response.json()
+    const arch = process.arch === 'arm64' ? 'arm64' : 'x64'
+    const dmgUrl = `https://github.com/torrescereno/infinito/releases/download/v${version}/infinito-${version}-${arch}.dmg`
+
+    console.log('[AutoUpdater] Downloading DMG from:', dmgUrl)
+
+    const dl = await download(mainWindowRef, dmgUrl, {
+      directory: app.getPath('downloads'),
+      filename: `infinito-${version}-${arch}.dmg`,
+      onProgress: (progress) => {
+        const percent = Math.round(progress.percent * 100)
+        console.log('[AutoUpdater] DMG download progress:', percent + '%')
+        sendUpdateStatus({
+          ...lastStatus,
+          dmgDownloadProgress: percent,
+          dmgDownloaded: false
+        })
+      }
+    })
+
+    const dmgPath = dl.getSavePath()
+    console.log('[AutoUpdater] DMG downloaded to:', dmgPath)
+
+    lastStatus = {
+      ...lastStatus,
+      dmgDownloadProgress: 100,
+      dmgDownloaded: true,
+      dmgPath
+    }
+    sendUpdateStatus(lastStatus)
+
+    showMacOSDMGReadyDialog(version, priority, dmgPath)
   } catch (error) {
-    console.warn('Could not fetch update metadata:', error)
-    return null
+    console.error('[AutoUpdater] Failed to download DMG:', error)
+    showMacOSManualUpdateDialog(version, priority)
   }
 }
 
-function showLinuxManualUpdateDialog(version: string): void {
+function showMacOSDMGReadyDialog(version: string, priority: UpdatePriority, dmgPath: string): void {
+  const titleMap: Record<UpdatePriority, string> = {
+    normal: 'Update ready',
+    security: 'Security update ready',
+    critical: 'Critical update ready'
+  }
+
   dialog
     .showMessageBox({
-      type: 'info',
-      title: 'Update available',
-      message: `A new version (${version}) is available. Please download it manually.`,
-      buttons: ['Download now', 'Remind later']
+      type: priority === 'critical' ? 'warning' : 'info',
+      title: titleMap[priority],
+      message: `Version ${version} has been downloaded.`,
+      detail: `The DMG file is in your Downloads folder. Would you like to open it now?`,
+      buttons: ['Open DMG', 'Later']
     })
     .then((result) => {
       if (result.response === 0) {
-        shell.openExternal(RELEASE_URL)
+        shell.openPath(dmgPath)
       }
     })
 }
@@ -182,7 +224,7 @@ function showMacOSManualUpdateDialog(version: string, priority: UpdatePriority):
       type: priority === 'critical' ? 'warning' : 'info',
       title: titleMap[priority],
       message: `A new version (${version}) is available.${noteMap[priority]}`,
-      detail: 'Automatic updates are not available on macOS. Please download the update manually.',
+      detail: 'Automatic downloads are not available. Please download the update manually.',
       buttons: ['Download now', 'Remind later']
     })
     .then((result) => {
@@ -190,6 +232,17 @@ function showMacOSManualUpdateDialog(version: string, priority: UpdatePriority):
         shell.openExternal(RELEASE_URL)
       }
     })
+}
+
+async function fetchUpdateMetadata(): Promise<UpdateMetadata | null> {
+  try {
+    const response = await fetch(METADATA_URL)
+    if (!response.ok) return null
+    return await response.json()
+  } catch (error) {
+    console.warn('[AutoUpdater] Could not fetch update metadata:', error)
+    return null
+  }
 }
 
 function sendUpdateStatus(status: UpdateInfo): void {
@@ -206,9 +259,10 @@ export function checkForUpdates(): void {
   if (is.dev) return
 
   try {
+    console.log('[AutoUpdater] Checking for updates...')
     autoUpdater.checkForUpdates()
   } catch (error) {
-    console.error('Failed to check for updates:', error)
+    console.error('[AutoUpdater] Failed to check for updates:', error)
   }
 }
 
@@ -246,6 +300,12 @@ export function forceRestart(): void {
   if (updateDownloaded) {
     storeRef?.set('pendingUpdate', null)
     autoUpdater.quitAndInstall()
+  }
+}
+
+export function openDMG(): void {
+  if (lastStatus.dmgPath) {
+    shell.openPath(lastStatus.dmgPath)
   }
 }
 
