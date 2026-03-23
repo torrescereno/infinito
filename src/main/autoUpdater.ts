@@ -133,10 +133,8 @@ async function handleUpdateAvailable(version: string): Promise<void> {
     return
   }
 
-  if (isWindows) {
-    console.log('[AutoUpdater] Starting Windows update download')
-    autoUpdater.downloadUpdate()
-  }
+  console.log('[AutoUpdater] Starting update download')
+  autoUpdater.downloadUpdate()
 
   if (previousPriority !== priority && checkInterval) {
     startPolling()
