@@ -285,4 +285,188 @@ describe('useBlocks', () => {
       expect(result.current.collapsedIds.has('date-1')).toBe(false)
     })
   })
+
+  describe('deleteGroup', () => {
+    it('should delete date block and its content block', async () => {
+      vi.mocked(window.api.getBlocks).mockResolvedValue([
+        { id: 'date-1', content: '# 01-01-2024', position: 0 },
+        { id: 'content-1', content: 'some content', position: 1 },
+        { id: 'date-2', content: '# 02-01-2024', position: 2 }
+      ])
+
+      const { result } = renderHook(() => useBlocks())
+
+      await waitFor(() => {
+        expect(result.current.loaded).toBe(true)
+      })
+
+      act(() => {
+        result.current.deleteGroup('date-1')
+      })
+
+      expect(result.current.blocks).toHaveLength(1)
+      expect(result.current.blocks[0].id).toBe('date-2')
+    })
+
+    it('should only delete date block when next block is also a date', async () => {
+      vi.mocked(window.api.getBlocks).mockResolvedValue([
+        { id: 'date-1', content: '# 01-01-2024', position: 0 },
+        { id: 'date-2', content: '# 02-01-2024', position: 1 }
+      ])
+
+      const { result } = renderHook(() => useBlocks())
+
+      await waitFor(() => {
+        expect(result.current.loaded).toBe(true)
+      })
+
+      act(() => {
+        result.current.deleteGroup('date-1')
+      })
+
+      expect(result.current.blocks).toHaveLength(1)
+      expect(result.current.blocks[0].id).toBe('date-2')
+    })
+
+    it('should do nothing when dateBlockId is not found', async () => {
+      vi.mocked(window.api.getBlocks).mockResolvedValue([
+        { id: 'date-1', content: '# 01-01-2024', position: 0 }
+      ])
+
+      const { result } = renderHook(() => useBlocks())
+
+      await waitFor(() => {
+        expect(result.current.loaded).toBe(true)
+      })
+
+      act(() => {
+        result.current.deleteGroup('nonexistent')
+      })
+
+      expect(result.current.blocks).toHaveLength(1)
+    })
+
+    it('should remove collapsed state for deleted group', async () => {
+      vi.mocked(window.api.getBlocks).mockResolvedValue([
+        { id: 'date-old', content: '# 01-01-2024', position: 0 },
+        { id: 'content-old', content: 'old content', position: 1 }
+      ])
+
+      const { result } = renderHook(() => useBlocks())
+
+      await waitFor(() => {
+        expect(result.current.loaded).toBe(true)
+      })
+
+      expect(result.current.collapsedIds.has('date-old')).toBe(true)
+
+      act(() => {
+        result.current.deleteGroup('date-old')
+      })
+
+      expect(result.current.collapsedIds.has('date-old')).toBe(false)
+    })
+  })
+
+  describe('scrollToDate', () => {
+    it('should expand collapsed group and scroll to element', async () => {
+      const mockScrollIntoView = vi.fn()
+      const mockElement = { scrollIntoView: mockScrollIntoView }
+      vi.spyOn(document, 'getElementById').mockReturnValue(mockElement as unknown as HTMLElement)
+
+      vi.mocked(window.api.getBlocks).mockResolvedValue([
+        { id: 'date-old', content: '# 01-01-2024', position: 0 },
+        { id: 'content-1', content: 'content', position: 1 }
+      ])
+
+      const { result } = renderHook(() => useBlocks())
+
+      await waitFor(() => {
+        expect(result.current.loaded).toBe(true)
+      })
+
+      expect(result.current.collapsedIds.has('date-old')).toBe(true)
+
+      act(() => {
+        result.current.scrollToDate('date-old')
+      })
+
+      expect(result.current.collapsedIds.has('date-old')).toBe(false)
+
+      await waitFor(() => {
+        expect(mockScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' })
+      })
+
+      vi.restoreAllMocks()
+    })
+
+    it('should handle missing DOM element gracefully', async () => {
+      vi.spyOn(document, 'getElementById').mockReturnValue(null)
+
+      vi.mocked(window.api.getBlocks).mockResolvedValue([
+        { id: 'date-1', content: '# 01-01-2024', position: 0 }
+      ])
+
+      const { result } = renderHook(() => useBlocks())
+
+      await waitFor(() => {
+        expect(result.current.loaded).toBe(true)
+      })
+
+      act(() => {
+        result.current.scrollToDate('date-1')
+      })
+
+      await new Promise((r) => setTimeout(r, 300))
+
+      vi.restoreAllMocks()
+    })
+  })
+
+  describe('save debounce', () => {
+    it('should debounce saving blocks', async () => {
+      vi.mocked(window.api.getBlocks).mockResolvedValue([
+        { id: 'block-1', content: 'initial', position: 0 }
+      ])
+
+      const { result } = renderHook(() => useBlocks())
+
+      await waitFor(() => {
+        expect(result.current.loaded).toBe(true)
+      })
+
+      vi.mocked(window.api.saveBlocks).mockClear()
+
+      act(() => {
+        result.current.updateBlock('block-1', 'updated')
+      })
+
+      expect(window.api.saveBlocks).not.toHaveBeenCalled()
+
+      await waitFor(() => {
+        expect(window.api.saveBlocks).toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('updateBlock edge cases', () => {
+    it('should not insert content block when next block is not a date', async () => {
+      vi.mocked(window.api.getBlocks).mockResolvedValue([
+        { id: 'block-1', content: 'text', position: 0 },
+        { id: 'block-2', content: 'more text', position: 1 }
+      ])
+
+      const { result } = renderHook(() => useBlocks())
+
+      await waitFor(() => {
+        expect(result.current.loaded).toBe(true)
+      })
+
+      act(() => {
+        result.current.updateBlock('block-1', '# 21-03-2026')
+      })
+
+      expect(result.current.blocks).toHaveLength(2)
+    })
+  })
 })
