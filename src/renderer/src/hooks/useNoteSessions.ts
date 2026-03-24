@@ -20,6 +20,10 @@ function loadRegistry(): NoteSessionRegistry {
   }
 }
 
+function loadSessionContent(id: string): string {
+  return localStorage.getItem(`${NOTE_PREFIX}${id}`) ?? ''
+}
+
 interface UseNoteSessionsReturn {
   sessions: NoteSession[]
   activeSessionId: string
@@ -35,20 +39,20 @@ export function useNoteSessions(): UseNoteSessionsReturn {
   const [registry, setRegistry] = useState<NoteSessionRegistry>(loadRegistry)
   const [content, setContent] = useState<string>(() => {
     const initial = loadRegistry()
-    return localStorage.getItem(`${NOTE_PREFIX}${initial.activeSessionId}`) ?? ''
+    return loadSessionContent(initial.activeSessionId)
   })
 
   useEffect(() => {
     localStorage.setItem(REGISTRY_KEY, JSON.stringify(registry))
   }, [registry])
 
-  useEffect(() => {
-    const loaded = localStorage.getItem(`${NOTE_PREFIX}${registry.activeSessionId}`) ?? ''
-    setContent(loaded)
-  }, [registry.activeSessionId])
-
   const setActiveSession = useCallback((id: string) => {
-    setRegistry((prev) => ({ ...prev, activeSessionId: id }))
+    setRegistry((prev) => {
+      if (prev.activeSessionId === id) return prev
+      const newContent = loadSessionContent(id)
+      setContent(newContent)
+      return { ...prev, activeSessionId: id }
+    })
   }, [])
 
   const createSession = useCallback(() => {
@@ -59,6 +63,7 @@ export function useNoteSessions(): UseNoteSessionsReturn {
       name: `Note ${index}`,
       createdAt: Date.now()
     }
+    setContent('')
     setRegistry((prev) => ({
       sessions: [...prev.sessions, session],
       activeSessionId: id
@@ -66,19 +71,23 @@ export function useNoteSessions(): UseNoteSessionsReturn {
   }, [registry.sessions.length])
 
   const deleteSession = useCallback((id: string) => {
+    localStorage.removeItem(`${NOTE_PREFIX}${id}`)
     setRegistry((prev) => {
-      localStorage.removeItem(`${NOTE_PREFIX}${id}`)
-
       if (prev.sessions.length <= 1) {
         const freshId = generateId()
         const fresh: NoteSession = { id: freshId, name: 'Note', createdAt: Date.now() }
+        setContent('')
         return { sessions: [fresh], activeSessionId: freshId }
       }
 
       const remaining = prev.sessions.filter((s) => s.id !== id)
+      const newActiveId = prev.activeSessionId === id ? remaining[0].id : prev.activeSessionId
+      if (newActiveId !== prev.activeSessionId) {
+        setContent(loadSessionContent(newActiveId))
+      }
       return {
         sessions: remaining,
-        activeSessionId: prev.activeSessionId === id ? remaining[0].id : prev.activeSessionId
+        activeSessionId: newActiveId
       }
     })
   }, [])

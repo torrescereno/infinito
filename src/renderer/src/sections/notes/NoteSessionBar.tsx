@@ -160,9 +160,7 @@ export function NoteSessionBar({
             onClick={() => onModeChange('edit')}
             className={cn(
               'flex items-center gap-1 h-5 px-1.5 text-[10px] font-medium rounded-sm transition-colors',
-              mode === 'edit'
-                ? 'bg-zinc-800 text-zinc-200'
-                : 'text-zinc-500 hover:text-zinc-300'
+              mode === 'edit' ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 hover:text-zinc-300'
             )}
           >
             <Pencil className="w-2.5 h-2.5" />
@@ -173,9 +171,7 @@ export function NoteSessionBar({
             onClick={() => onModeChange('preview')}
             className={cn(
               'flex items-center gap-1 h-5 px-1.5 text-[10px] font-medium rounded-sm transition-colors',
-              mode === 'preview'
-                ? 'bg-zinc-800 text-zinc-200'
-                : 'text-zinc-500 hover:text-zinc-300'
+              mode === 'preview' ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 hover:text-zinc-300'
             )}
           >
             <Eye className="w-2.5 h-2.5" />

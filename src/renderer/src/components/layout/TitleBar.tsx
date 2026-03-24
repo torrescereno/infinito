@@ -62,9 +62,7 @@ export function TitleBar({
               onClick={() => onViewChange('notes')}
               className={cn(
                 'h-6 px-2.5 text-[11px] rounded-sm',
-                view === 'notes'
-                  ? 'bg-zinc-800 text-zinc-200'
-                  : 'text-zinc-500 hover:text-zinc-300'
+                view === 'notes' ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 hover:text-zinc-300'
               )}
             >
               notes
