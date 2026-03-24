@@ -18,6 +18,7 @@ export default function App(): React.JSX.Element {
   const [windowKind, setWindowKind] = useState<'main' | 'menubar'>('main')
   const [appMode, setAppMode] = useState<'normal' | 'menubar'>('normal')
   const isMenubarWindow = windowKind === 'menubar'
+  const activeView: View = isMenubarWindow ? 'notes' : view
 
   const {
     blocks,
@@ -89,12 +90,6 @@ export default function App(): React.JSX.Element {
     }
   }, [])
 
-  useEffect(() => {
-    if (isMenubarWindow && view !== 'notes') {
-      setView('notes')
-    }
-  }, [isMenubarWindow, view])
-
   const handleTogglePin = async (): Promise<void> => {
     const pinned = await windowService.togglePin()
     setIsPinned(pinned)
@@ -129,7 +124,7 @@ export default function App(): React.JSX.Element {
       style={{ fontFamily: 'var(--app-font-family)' }}
     >
       <TitleBar
-        view={view}
+        view={activeView}
         isMenubarWindow={isMenubarWindow}
         isPinned={isPinned}
         onViewChange={setView}
@@ -152,15 +147,15 @@ export default function App(): React.JSX.Element {
       <main
         className={cn(
           'flex-1',
-          !isMenubarWindow && view === 'canvas' ? 'overflow-hidden' : 'overflow-y-auto'
+          !isMenubarWindow && activeView === 'canvas' ? 'overflow-hidden' : 'overflow-y-auto'
         )}
       >
         <AnimatePresence mode="wait">
-          {!isMenubarWindow && view === 'canvas' ? (
+          {!isMenubarWindow && activeView === 'canvas' ? (
             <CanvasView />
           ) : (
             <div className="max-w-2xl mx-auto px-4 pt-5">
-              {!isMenubarWindow && view === 'config' ? (
+              {!isMenubarWindow && activeView === 'config' ? (
                 <ConfigView
                   settings={settings}
                   isMacOS={isMacOS}
