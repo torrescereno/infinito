@@ -235,8 +235,9 @@ describe('useBlocks', () => {
         result.current.addNewDay()
       })
 
-      expect(result.current.blocks).toHaveLength(1)
+      expect(result.current.blocks).toHaveLength(2)
       expect(result.current.blocks[0].content).toBe('# 21-03-2026')
+      expect(result.current.blocks[1].content).toBe('')
     })
 
     it('should not duplicate todays date block', async () => {
