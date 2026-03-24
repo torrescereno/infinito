@@ -4,7 +4,12 @@ import type { View, DateGroup } from '@renderer/types'
 export type VimLevel = 'tabs' | 'view'
 
 const VIEWS: View[] = ['daily', 'notes', 'canvas', 'config']
-const VIEW_MAP: Record<string, View> = { '1': 'daily', '2': 'notes', '3': 'canvas', '4': 'config' }
+const VIEW_MAP: Record<string, View> = {
+  '1': 'daily',
+  '2': 'notes',
+  '3': 'canvas',
+  '4': 'config'
+}
 
 interface UseVimModeOptions {
   enabled: boolean
@@ -60,36 +65,41 @@ export function useVimMode({
   const [highlightedId, setHighlightedId] = useState<string | null>(null)
   const [level, setLevel] = useState<VimLevel>('tabs')
 
-  const optionsRef = useRef({
+  // React 19 pattern: derive state from previous props during render
+  // See: https://react.dev/reference/react/useState#storing-information-from-previous-renders
+  const [prevView, setPrevView] = useState(activeView)
+  const [prevEnabled, setPrevEnabled] = useState(enabled)
+
+  if (prevView !== activeView || prevEnabled !== enabled) {
+    setPrevView(activeView)
+    setPrevEnabled(enabled)
+    setHighlightedId(null)
+    setLevel('tabs')
+  }
+
+  // Clear highlight when entering edit mode (derived state)
+  const effectiveHighlightedId = focusedId ? null : highlightedId
+
+  // Keep a ref to latest values for the keydown handler closure
+  const stateRef = useRef({
     activeView,
     groupedBlocks,
     focusedId,
     collapsedIds,
-    highlightedId,
+    highlightedId: effectiveHighlightedId,
     level
   })
 
-  optionsRef.current = {
-    activeView,
-    groupedBlocks,
-    focusedId,
-    collapsedIds,
-    highlightedId,
-    level
-  }
-
-  // Reset to tabs level when switching views or disabling
   useEffect(() => {
-    setHighlightedId(null)
-    setLevel('tabs')
-  }, [activeView, enabled])
-
-  // Clear highlight when entering edit mode (focusedId set by textarea)
-  useEffect(() => {
-    if (focusedId) {
-      setHighlightedId(null)
+    stateRef.current = {
+      activeView,
+      groupedBlocks,
+      focusedId,
+      collapsedIds,
+      highlightedId: effectiveHighlightedId,
+      level
     }
-  }, [focusedId])
+  })
 
   const scrollToBlock = useCallback((blockId: string) => {
     requestAnimationFrame(() => {
@@ -104,7 +114,6 @@ export function useVimMode({
     if (!enabled) return
 
     const handleKeyDown = (e: KeyboardEvent): void => {
-      // Always skip if user is typing in an editable element
       if (isEditableElement(document.activeElement)) return
 
       const {
@@ -114,18 +123,16 @@ export function useVimMode({
         collapsedIds: collapsed,
         highlightedId: highlighted,
         level: currentLevel
-      } = optionsRef.current
+      } = stateRef.current
 
       // ── TABS LEVEL ──
       if (currentLevel === 'tabs') {
-        // Direct view switching: 1-4
         if (VIEW_MAP[e.key]) {
           e.preventDefault()
           setView(VIEW_MAP[e.key])
           return
         }
 
-        // Cycle tabs with h/l
         if (e.key === 'h' || e.key === 'l') {
           e.preventDefault()
           const currentIdx = VIEWS.indexOf(view)
@@ -135,12 +142,10 @@ export function useVimMode({
           return
         }
 
-        // Enter current view with i
         if (e.key === 'i') {
           e.preventDefault()
           setLevel('view')
 
-          // View-specific enter behavior
           if (view === 'daily') {
             const visibleIds = getVisibleBlockIds(groups, collapsed)
             if (visibleIds.length > 0) {
@@ -148,7 +153,6 @@ export function useVimMode({
               scrollToBlock(visibleIds[0])
             }
           } else if (view === 'notes') {
-            // Enter edit mode in notes
             document.dispatchEvent(new CustomEvent('vim:enter-notes-edit'))
           }
           return
@@ -159,7 +163,6 @@ export function useVimMode({
 
       // ── VIEW LEVEL ──
 
-      // Escape returns to tabs level
       if (e.key === 'Escape') {
         e.preventDefault()
         setHighlightedId(null)
@@ -167,7 +170,6 @@ export function useVimMode({
         return
       }
 
-      // Daily view keybindings
       if (view === 'daily') {
         const visibleIds = getVisibleBlockIds(groups, collapsed)
 
@@ -210,7 +212,6 @@ export function useVimMode({
           return
         }
 
-        // Expand collapsed date block with l
         if (e.key === 'l' && highlighted) {
           const group = groups.find((g) => g.dateBlock?.id === highlighted)
           if (group?.dateBlock && collapsed.has(group.dateBlock.id)) {
@@ -220,7 +221,6 @@ export function useVimMode({
           }
         }
 
-        // Collapse expanded date block with h
         if (e.key === 'h' && highlighted) {
           const group = groups.find((g) => g.dateBlock?.id === highlighted)
           if (group?.dateBlock && !collapsed.has(group.dateBlock.id)) {
@@ -231,7 +231,6 @@ export function useVimMode({
         }
       }
 
-      // Notes view keybindings at view level
       if (view === 'notes') {
         if (e.key === 'i') {
           e.preventDefault()
@@ -246,7 +245,7 @@ export function useVimMode({
   }, [enabled, setView, setFocusedId, addBlock, toggleCollapse, scrollToBlock])
 
   return {
-    highlightedId: enabled ? highlightedId : null,
+    highlightedId: enabled ? effectiveHighlightedId : null,
     vimLevel: enabled ? level : 'tabs'
   }
 }

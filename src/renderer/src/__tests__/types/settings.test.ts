@@ -65,7 +65,8 @@ describe('DEFAULT_SETTINGS', () => {
       fontSize: 12,
       fontFamily: 'inter',
       codeTheme: 'zinc',
-      ligatures: false
+      ligatures: false,
+      vimMode: false
     })
   })
 

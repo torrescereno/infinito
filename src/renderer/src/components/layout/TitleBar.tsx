@@ -122,10 +122,12 @@ export function TitleBar({
       </div>
 
       {vimMode && (
-        <span className={cn(
-          'text-[9px] font-mono uppercase tracking-wider',
-          vimLevel === 'view' ? 'text-zinc-400' : 'text-zinc-600'
-        )}>
+        <span
+          className={cn(
+            'text-[9px] font-mono uppercase tracking-wider',
+            vimLevel === 'view' ? 'text-zinc-400' : 'text-zinc-600'
+          )}
+        >
           {vimLevel === 'view' ? '-- INSERT --' : 'NORMAL'}
         </span>
       )}
