@@ -37,6 +37,11 @@ export function setupAutoUpdater(mainWindow: BrowserWindow, store: Store<StoreSc
   autoUpdater.on('update-available', (info) => {
     console.log('[AutoUpdater] Update available:', info.version)
 
+    if (process.platform === 'darwin') {
+      handleBrewUpdateAvailable(info.version)
+      return
+    }
+
     if (!canAutoUpdate) {
       showLinuxManualUpdateDialog(info.version)
       return
@@ -85,7 +90,7 @@ export function setupAutoUpdater(mainWindow: BrowserWindow, store: Store<StoreSc
 }
 
 export function checkPendingUpdate(): void {
-  if (is.dev || !storeRef) return
+  if (is.dev || !storeRef || process.platform === 'darwin') return
 
   const pending = storeRef.get('pendingUpdate')
   if (!pending) return
@@ -132,6 +137,23 @@ async function handleUpdateAvailable(version: string): Promise<void> {
   if (previousPriority !== priority && checkInterval) {
     startPolling()
   }
+}
+
+async function handleBrewUpdateAvailable(version: string): Promise<void> {
+  console.log('[AutoUpdater] Brew update available:', version)
+  const metadata = await fetchUpdateMetadata()
+  const priority = metadata?.priority || 'normal'
+
+  lastPriority = priority
+  lastStatus = {
+    available: true,
+    version,
+    priority,
+    message: metadata?.message,
+    brewUpdate: true
+  }
+
+  sendUpdateStatus(lastStatus)
 }
 
 async function fetchUpdateMetadata(): Promise<UpdateMetadata | null> {

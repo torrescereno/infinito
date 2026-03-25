@@ -24,6 +24,8 @@ export function UpdateNotification({
   }, [updateInfo])
 
   useEffect(() => {
+    if (!updateInfo?.available || updateInfo.priority !== 'critical' || updateInfo.brewUpdate) return
+
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -82,6 +84,18 @@ function BannerContent({
 }: BannerContentProps): React.JSX.Element {
   const isCritical = updateInfo.priority === 'critical'
   const isSecurity = updateInfo.priority === 'security'
+
+  if (updateInfo.brewUpdate) {
+    return (
+      <BrewUpdateBanner
+        updateInfo={updateInfo}
+        isCritical={isCritical}
+        isSecurity={isSecurity}
+        onDismiss={onDismiss}
+      />
+    )
+  }
+
   const isDownloaded = updateInfo.downloaded === true
   const isDownloading = !isDownloaded && (updateInfo.progress ?? 0) > 0
   const progress = updateInfo.progress ?? 0
@@ -227,6 +241,90 @@ function BannerContent({
       ) : isDownloading ? (
         <span className="text-[11px] text-zinc-500 font-mono">Downloading... {progress}%</span>
       ) : null}
+    </div>
+  )
+}
+
+interface BrewUpdateBannerProps {
+  updateInfo: UpdateInfo
+  isCritical: boolean
+  isSecurity: boolean
+  onDismiss: () => void
+}
+
+function BrewUpdateBanner({
+  updateInfo,
+  isCritical,
+  isSecurity,
+  onDismiss
+}: BrewUpdateBannerProps): React.JSX.Element {
+  const bg = isCritical
+    ? 'bg-red-950/90 border-red-900/30'
+    : isSecurity
+      ? 'bg-orange-950/90 border-orange-900/30'
+      : 'bg-zinc-900/90 border-zinc-800/50'
+  const textColor = isCritical
+    ? 'text-red-200'
+    : isSecurity
+      ? 'text-orange-200'
+      : 'text-zinc-300'
+  const versionColor = isCritical
+    ? 'text-red-400/60'
+    : isSecurity
+      ? 'text-orange-400/60'
+      : 'text-zinc-500'
+  const hintColor = isCritical
+    ? 'text-red-400/40'
+    : isSecurity
+      ? 'text-orange-400/40'
+      : 'text-zinc-600'
+  const btnColor = isCritical
+    ? 'text-red-400/60 hover:text-red-300'
+    : isSecurity
+      ? 'text-orange-400/50 hover:text-orange-300'
+      : 'text-zinc-600 hover:text-zinc-400'
+  const iconColor = isCritical
+    ? 'text-red-400'
+    : isSecurity
+      ? 'text-orange-400'
+      : 'text-zinc-400'
+
+  const iconPath = isCritical
+    ? 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
+    : isSecurity
+      ? 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'
+      : 'M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10'
+
+  return (
+    <div className={`flex flex-col gap-0.5 rounded-lg backdrop-blur-md border ${bg} px-3 py-2`}>
+      <div className="flex items-center gap-2">
+        <svg
+          className={`h-3.5 w-3.5 shrink-0 ${iconColor}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={iconPath} />
+        </svg>
+
+        <span className={`flex-1 text-[11px] ${textColor}`}>
+          Update available
+          {updateInfo.version && <span className={versionColor}> v{updateInfo.version}</span>}
+        </span>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onDismiss}
+          className={`h-6 rounded-sm ${btnColor} text-[11px]`}
+        >
+          Skip
+        </Button>
+      </div>
+      <span className={`${hintColor} font-mono text-[10px] pl-5.5`}>
+        brew upgrade --cask infinito
+      </span>
     </div>
   )
 }
