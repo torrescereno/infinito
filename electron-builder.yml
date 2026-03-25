@@ -1,5 +1,5 @@
 appId: com.infinito.app
-productName: infinito
+productName: Infinito
 directories:
   buildResources: build
   output: dist
