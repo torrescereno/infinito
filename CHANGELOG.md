@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0](https://github.com/blas-works/infinito/compare/v1.6.0...v1.7.0) (2026-03-25)
+
+
+### Features
+
+* capitalize product name to Infinito ([62aab4a](https://github.com/blas-works/infinito/commit/62aab4a3de39d48c4fc286e8e607542f86862276))
+* migrate to blas-works org and enable macOS auto-updates ([38d2e0e](https://github.com/blas-works/infinito/commit/38d2e0e152755572e62c6a0cf47f92fc5e91f7e9))
+
 ## [1.6.0](https://github.com/torrescereno/infinito/compare/v1.5.0...v1.6.0) (2026-03-24)
 
 
