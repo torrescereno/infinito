@@ -38,51 +38,68 @@
 
 ## Features
 
-| **Notes**         | Create and organize blocks of content by date               |
-| :---------------- | :---------------------------------------------------------- |
-|                   | Markdown support with syntax highlighting                   |
-|                   | Code blocks with Mermaid diagram rendering                  |
-|                   | Collapsible date groups                                     |
-| **Canvas**        | Draw shapes: rectangles, circles, triangles                 |
-|                   | Lines and arrows with adjustable Bezier curves              |
-|                   | Text elements with configurable font size                   |
-|                   | Stroke and fill color presets, line styles (solid/dash/dot) |
-|                   | Pan and zoom navigation                                     |
-| **Settings**      | Configurable font size and font family                      |
-|                   | Code syntax theme selection                                 |
-| **Local Storage** | Private data stored locally, no internet required           |
-|                   | SQLite database with offline-first design                   |
-
-## Screenshots
-
-<div align="center">
-
-|                       Notes View                        |                       Canvas View                        |
-| :-----------------------------------------------------: | :------------------------------------------------------: |
-| <img width="360" src="resources/screenshots/notes.png"> | <img width="360" src="resources/screenshots/canvas.png"> |
-
-|                       Config View                        |                       Index View                        |
-| :------------------------------------------------------: | :-----------------------------------------------------: |
-| <img width="360" src="resources/screenshots/config.png"> | <img width="360" src="resources/screenshots/index.png"> |
-
-|                                                           |
-| :-------------------------------------------------------: |
-| <img width="360" src="resources/screenshots/portada.png"> |
-
-</div>
+| **Notes**    | Infinite canvas with pan and zoom               |
+| :----------- | :---------------------------------------------- |
+|              | Markdown support with syntax highlighting       |
+|              | Mermaid diagram rendering in code blocks        |
+|              | Date-based organization with collapsible groups |
+| **Canvas**   | Shape tools: rectangles, circles, triangles     |
+|              | Lines and arrows with Bezier curves             |
+|              | Text elements with customizable font            |
+|              | Color presets and line styles (solid/dash/dot)  |
+| **Settings** | Configurable font size and family               |
+|              | Syntax theme selection                          |
+| **Data**     | Local SQLite storage, no cloud required         |
+|              | Offline-first design, privacy-focused           |
 
 ## Installation
 
-### Downloads
+### Homebrew
+
+**Step 1:** Add the tap (first time only):
+
+```bash
+brew tap blas-works/apps
+```
+
+**Step 2:** Install:
+
+```bash
+brew install --cask hollow
+brew install --cask infinito
+```
+
+Or install without prior tap:
+
+```bash
+brew install --cask blas-works/apps/hollow
+brew install --cask blas-works/apps/infinito
+```
+
+**Update** (when a new version is released):
+
+```bash
+brew upgrade --cask hollow
+brew upgrade --cask infinito
+```
+
+**Option 2** — One-liner without prior tap:
+
+```bash
+brew install --cask blas-works/apps/hollow
+brew install --cask blas-works/apps/infinito
+```
+
+### Manual Download
 
 Download the latest version from [GitHub Releases](https://github.com/blas-works/infinito/releases/latest).
 
-| Platform    | Architecture  | Format                     |
-| ----------- | ------------- | -------------------------- |
-| **Windows** | x64           | `.exe` (NSIS)              |
-| **Linux**   | x64           | `.AppImage` `.snap` `.deb` |
-| **macOS**   | Apple Silicon | `.dmg`                     |
-| **macOS**   | Intel         | `.dmg`                     |
+| Platform    | Architecture  | Format                    |
+| ----------- | ------------- | ------------------------- |
+| **Windows** | x64           | `.exe` (NSIS)             |
+| **Linux**   | x64           | `.AppImage` `.deb` `.rpm` |
+| **macOS**   | Apple Silicon | `.dmg`                    |
+| **macOS**   | Intel         | `.dmg`                    |
 
 #### macOS: First Run
 
