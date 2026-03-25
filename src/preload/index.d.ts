@@ -23,6 +23,7 @@ interface UpdateAPI {
   getStatus: () => Promise<UpdateStatusInfo>
   restart: () => Promise<boolean>
   snooze: () => Promise<boolean>
+  brewUpgrade: () => Promise<boolean>
   onStatus: (callback: (status: UpdateStatusInfo) => void) => () => void
 }
 

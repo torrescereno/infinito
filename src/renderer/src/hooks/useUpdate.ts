@@ -6,6 +6,7 @@ export function useUpdate(): {
   checkForUpdates: () => Promise<void>
   restartNow: () => Promise<void>
   snoozeUpdate: () => Promise<void>
+  brewUpgrade: () => Promise<void>
   dismissUpdate: () => void
 } {
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null)
@@ -43,6 +44,11 @@ export function useUpdate(): {
     await window.api.update.snooze()
   }, [])
 
+  const brewUpgrade = useCallback(async (): Promise<void> => {
+    if (!window.api?.update) return
+    await window.api.update.brewUpgrade()
+  }, [])
+
   const dismissUpdate = useCallback((): void => {
     setUpdateInfo(null)
   }, [])
@@ -52,6 +58,7 @@ export function useUpdate(): {
     checkForUpdates,
     restartNow,
     snoozeUpdate,
+    brewUpgrade,
     dismissUpdate
   }
 }

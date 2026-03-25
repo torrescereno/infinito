@@ -7,6 +7,7 @@ interface UpdateNotificationProps {
   updateInfo: UpdateInfo | null
   onRestart: () => void
   onSnooze: () => void
+  onBrewUpgrade: () => void
   onDismiss: () => void
 }
 
@@ -14,6 +15,7 @@ export function UpdateNotification({
   updateInfo,
   onRestart,
   onSnooze,
+  onBrewUpgrade,
   onDismiss
 }: UpdateNotificationProps): React.JSX.Element {
   const [countdown, setCountdown] = useState(300)
@@ -59,6 +61,7 @@ export function UpdateNotification({
             countdown={countdown}
             onRestart={onRestart}
             onSnooze={onSnooze}
+            onBrewUpgrade={onBrewUpgrade}
             onDismiss={onDismiss}
           />
         </motion.div>
@@ -72,6 +75,7 @@ interface BannerContentProps {
   countdown: number
   onRestart: () => void
   onSnooze: () => void
+  onBrewUpgrade: () => void
   onDismiss: () => void
 }
 
@@ -80,6 +84,7 @@ function BannerContent({
   countdown,
   onRestart,
   onSnooze,
+  onBrewUpgrade,
   onDismiss
 }: BannerContentProps): React.JSX.Element {
   const isCritical = updateInfo.priority === 'critical'
@@ -91,6 +96,7 @@ function BannerContent({
         updateInfo={updateInfo}
         isCritical={isCritical}
         isSecurity={isSecurity}
+        onBrewUpgrade={onBrewUpgrade}
         onDismiss={onDismiss}
       />
     )
@@ -249,6 +255,7 @@ interface BrewUpdateBannerProps {
   updateInfo: UpdateInfo
   isCritical: boolean
   isSecurity: boolean
+  onBrewUpgrade: () => void
   onDismiss: () => void
 }
 
@@ -256,8 +263,12 @@ function BrewUpdateBanner({
   updateInfo,
   isCritical,
   isSecurity,
+  onBrewUpgrade,
   onDismiss
 }: BrewUpdateBannerProps): React.JSX.Element {
+  const isUpdating = updateInfo.brewUpdating === true
+  const hasError = !!updateInfo.brewError
+
   const bg = isCritical
     ? 'bg-red-950/90 border-red-900/30'
     : isSecurity
@@ -273,21 +284,31 @@ function BrewUpdateBanner({
     : isSecurity
       ? 'text-orange-400/60'
       : 'text-zinc-500'
-  const hintColor = isCritical
-    ? 'text-red-400/40'
-    : isSecurity
-      ? 'text-orange-400/40'
-      : 'text-zinc-600'
-  const btnColor = isCritical
+  const skipBtnColor = isCritical
     ? 'text-red-400/60 hover:text-red-300'
     : isSecurity
       ? 'text-orange-400/50 hover:text-orange-300'
       : 'text-zinc-600 hover:text-zinc-400'
+  const updateBtnColor = isCritical
+    ? 'bg-red-900/50 text-red-200 hover:bg-red-900/70'
+    : isSecurity
+      ? 'bg-orange-900/50 text-orange-200 hover:bg-orange-900/70'
+      : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
   const iconColor = isCritical
     ? 'text-red-400'
     : isSecurity
       ? 'text-orange-400'
       : 'text-zinc-400'
+  const errorColor = isCritical
+    ? 'text-red-400/60'
+    : isSecurity
+      ? 'text-orange-400/60'
+      : 'text-zinc-500'
+  const spinnerColor = isCritical
+    ? 'border-red-400/30 border-t-red-300'
+    : isSecurity
+      ? 'border-orange-400/30 border-t-orange-300'
+      : 'border-zinc-600 border-t-zinc-300'
 
   const iconPath = isCritical
     ? 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'
@@ -296,7 +317,7 @@ function BrewUpdateBanner({
       : 'M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10'
 
   return (
-    <div className={`flex flex-col gap-0.5 rounded-lg backdrop-blur-md border ${bg} px-3 py-2`}>
+    <div className={`flex flex-col gap-1 rounded-lg backdrop-blur-md border ${bg} px-3 py-2`}>
       <div className="flex items-center gap-2">
         <svg
           className={`h-3.5 w-3.5 shrink-0 ${iconColor}`}
@@ -309,22 +330,43 @@ function BrewUpdateBanner({
         </svg>
 
         <span className={`flex-1 text-[11px] ${textColor}`}>
-          Update available
-          {updateInfo.version && <span className={versionColor}> v{updateInfo.version}</span>}
+          {isUpdating ? 'Updating...' : 'Update available'}
+          {!isUpdating && updateInfo.version && (
+            <span className={versionColor}> v{updateInfo.version}</span>
+          )}
         </span>
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onDismiss}
-          className={`h-6 rounded-sm ${btnColor} text-[11px]`}
-        >
-          Skip
-        </Button>
+        {isUpdating ? (
+          <div
+            className={`h-3.5 w-3.5 shrink-0 animate-spin rounded-full border-2 ${spinnerColor}`}
+          />
+        ) : (
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onDismiss}
+              className={`h-6 rounded-sm ${skipBtnColor} text-[11px]`}
+            >
+              Skip
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onBrewUpgrade}
+              className={`h-6 rounded-sm ${updateBtnColor} text-[11px]`}
+            >
+              Update
+            </Button>
+          </>
+        )}
       </div>
-      <span className={`${hintColor} font-mono text-[10px] pl-5.5`}>
-        brew upgrade --cask infinito
-      </span>
+
+      {hasError && (
+        <span className={`${errorColor} text-[10px] pl-5.5`}>
+          {updateInfo.brewError}
+        </span>
+      )}
     </div>
   )
 }

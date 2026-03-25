@@ -37,7 +37,8 @@ export default function App(): React.JSX.Element {
 
   const { settings, setFontSize, setFontFamily, setCodeTheme, setLigatures, setVimMode } =
     useSettings()
-  const { updateInfo, checkForUpdates, restartNow, snoozeUpdate, dismissUpdate } = useUpdate()
+  const { updateInfo, checkForUpdates, restartNow, snoozeUpdate, brewUpgrade, dismissUpdate } =
+    useUpdate()
 
   const { highlightedId, vimLevel } = useVimMode({
     enabled: settings.vimMode,
@@ -172,6 +173,7 @@ export default function App(): React.JSX.Element {
           updateInfo={updateInfo}
           onRestart={restartNow}
           onSnooze={snoozeUpdate}
+          onBrewUpgrade={brewUpgrade}
           onDismiss={dismissUpdate}
         />
       )}

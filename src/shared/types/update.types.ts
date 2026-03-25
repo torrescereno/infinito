@@ -16,6 +16,8 @@ export interface UpdateInfo {
   progress?: number
   downloaded?: boolean
   brewUpdate?: boolean
+  brewUpdating?: boolean
+  brewError?: string
 }
 
 export interface PendingUpdate {

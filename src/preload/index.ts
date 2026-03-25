@@ -40,6 +40,7 @@ const api = {
     getStatus: (): Promise<Record<string, unknown>> => ipcRenderer.invoke('update:get-status'),
     restart: (): Promise<boolean> => ipcRenderer.invoke('update:restart'),
     snooze: (): Promise<boolean> => ipcRenderer.invoke('update:snooze'),
+    brewUpgrade: (): Promise<boolean> => ipcRenderer.invoke('update:brew-upgrade'),
     onStatus: (callback: (_status: Record<string, unknown>) => void): (() => void) => {
       const handler = (_event: Electron.IpcRendererEvent, status: Record<string, unknown>): void =>
         callback(status)
