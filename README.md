@@ -22,8 +22,8 @@
     <a href="https://bun.sh">
       <img alt="Bun" src="https://img.shields.io/badge/Bun-1.3-000000?style=flat-square&logo=bun">
     </a>
-    <a href="https://codecov.io/gh/torrescereno/infinito">
-      <img alt="Coverage" src="https://img.shields.io/codecov/c/github/torrescereno/infinito?style=flat-square&logo=codecov&label=coverage">
+    <a href="https://codecov.io/gh/blas-works/infinito">
+      <img alt="Coverage" src="https://img.shields.io/codecov/c/github/blas-works/infinito?style=flat-square&logo=codecov&label=coverage">
     </a>
   </p>
 
@@ -75,7 +75,7 @@
 
 ### Downloads
 
-Download the latest version from [GitHub Releases](https://github.com/torrescereno/infinito/releases/latest).
+Download the latest version from [GitHub Releases](https://github.com/blas-works/infinito/releases/latest).
 
 | Platform    | Architecture  | Format                     |
 | ----------- | ------------- | -------------------------- |
@@ -92,7 +92,7 @@ The app is not signed with Apple Developer. After installing, run in Terminal:
 xattr -cr /Applications/Infinito.app
 ```
 
-> **Note:** Automatic updates are not available on macOS (requires Apple Developer signature). Download new versions manually from [Releases](https://github.com/torrescereno/infinito/releases/latest).
+> **Note:** Automatic updates are not available on macOS (requires Apple Developer signature). Download new versions manually from [Releases](https://github.com/blas-works/infinito/releases/latest).
 
 ## Development
 
@@ -105,7 +105,7 @@ xattr -cr /Applications/Infinito.app
 
 ```bash
 # Clone the repository
-git clone https://github.com/torrescereno/infinito.git
+git clone https://github.com/blas-works/infinito.git
 cd infinito
 
 # Install dependencies
@@ -134,5 +134,5 @@ bun run dev
 ---
 
 <div align="center">
-  <sub>Made with ❤️ by <a href="https://github.com/torrescereno">torrescereno</a></sub>
+  <sub>Made with ❤️ by <a href="https://github.com/blas-works">blas-works</a></sub>
 </div>

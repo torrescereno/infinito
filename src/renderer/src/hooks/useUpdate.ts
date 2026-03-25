@@ -10,16 +10,6 @@ export function useUpdate(): {
 } {
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null)
 
-  // Banner
-  // const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>({
-  //   available: true,
-  //   version: '1.2.0',
-  //   priority: 'normal', // cambia a 'security' o 'critical' para probar cada variante
-  //   progress: 100, // simula descarga en progreso
-  //   downloaded: false,
-  //   manualDownload: false
-  // })
-
   useEffect(() => {
     if (!window.api?.update) return
 

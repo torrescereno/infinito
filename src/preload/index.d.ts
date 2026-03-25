@@ -16,10 +16,6 @@ interface UpdateStatusInfo {
   message?: string
   progress?: number
   downloaded?: boolean
-  manualDownload?: boolean
-  dmgDownloadProgress?: number
-  dmgDownloaded?: boolean
-  dmgPath?: string
 }
 
 interface UpdateAPI {
@@ -27,7 +23,6 @@ interface UpdateAPI {
   getStatus: () => Promise<UpdateStatusInfo>
   restart: () => Promise<boolean>
   snooze: () => Promise<boolean>
-  openDMG: () => Promise<boolean>
   onStatus: (callback: (status: UpdateStatusInfo) => void) => () => void
 }
 

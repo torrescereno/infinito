@@ -47,6 +47,6 @@ appImage:
   artifactName: ${name}-${version}.${ext}
 publish:
   provider: github
-  owner: torrescereno
+  owner: blas-works
   repo: infinito
   releaseType: release

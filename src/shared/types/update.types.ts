@@ -15,10 +15,6 @@ export interface UpdateInfo {
   message?: string
   progress?: number
   downloaded?: boolean
-  manualDownload?: boolean
-  dmgDownloadProgress?: number
-  dmgDownloaded?: boolean
-  dmgPath?: string
 }
 
 export interface PendingUpdate {

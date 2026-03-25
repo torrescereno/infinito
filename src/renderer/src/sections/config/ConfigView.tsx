@@ -71,7 +71,7 @@ export function ConfigView({
   }
 
   const handleGithubClick = (): void => {
-    window.api?.openExternal('https://github.com/torrescereno/infinito')
+    window.api?.openExternal('https://github.com/blas-works/infinito')
   }
 
   return (

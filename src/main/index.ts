@@ -12,8 +12,7 @@ import {
   checkForUpdates,
   getUpdateStatus,
   forceRestart,
-  snoozeCriticalRestart,
-  openDMG
+  snoozeCriticalRestart
 } from './autoUpdater'
 import type { PendingUpdate } from '../shared/types'
 
@@ -494,11 +493,6 @@ if (!gotTheLock) {
 
     ipcMain.handle('update:snooze', () => {
       snoozeCriticalRestart()
-      return true
-    })
-
-    ipcMain.handle('update:open-dmg', () => {
-      openDMG()
       return true
     })
 
