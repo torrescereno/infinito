@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.2](https://github.com/blas-works/infinito/compare/v1.9.1...v1.9.2) (2026-03-28)
+
+
+### Bug Fixes
+
+* update ([0b2679d](https://github.com/blas-works/infinito/commit/0b2679d09587a6cf4286e7f05d2679d299fd2d6f))
+
 ## [1.9.1](https://github.com/blas-works/infinito/compare/v1.9.0...v1.9.1) (2026-03-28)
 
 
