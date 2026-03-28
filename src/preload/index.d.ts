@@ -44,6 +44,7 @@ interface InfinitoAPI {
   openExternal: (url: string) => Promise<boolean>
   onShowNotes: (callback: () => void) => () => void
   onAppModeChanged: (callback: (mode: AppMode) => void) => () => void
+  onFlushPendingSaves: (callback: () => Promise<void>) => () => void
   update: UpdateAPI
 }
 

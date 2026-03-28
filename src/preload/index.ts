@@ -35,6 +35,16 @@ const api = {
       ipcRenderer.removeListener('app:mode-changed', handler)
     }
   },
+  onFlushPendingSaves: (callback: () => Promise<void>): (() => void) => {
+    const handler = async (): Promise<void> => {
+      await callback()
+      ipcRenderer.send('blocks:flushed')
+    }
+    ipcRenderer.on('app:flush-pending-saves', handler)
+    return (): void => {
+      ipcRenderer.removeListener('app:flush-pending-saves', handler)
+    }
+  },
   update: {
     check: (): Promise<boolean> => ipcRenderer.invoke('update:check'),
     getStatus: (): Promise<Record<string, unknown>> => ipcRenderer.invoke('update:get-status'),

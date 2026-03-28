@@ -22,20 +22,24 @@ interface UseBlocksReturn {
   deleteGroup: (dateBlockId: string) => void
 }
 
-export function useBlocks(): UseBlocksReturn {
+export function useBlocks(reloadTrigger?: number): UseBlocksReturn {
   const [blocks, setBlocks] = useState<Block[]>([])
   const [focusedId, setFocusedId] = useState<string | null>(null)
   const [loaded, setLoaded] = useState(false)
   const [collapsedIds, setCollapsedIds] = useState<Set<string>>(new Set())
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const blocksRef = useRef<Block[]>([])
 
   useEffect(() => {
+    blocksRef.current = blocks
+  }, [blocks])
+
+  const loadBlocks = useCallback(() => {
     blockService.getAll().then((rows) => {
       const mapped = rows.map((r) => ({ id: r.id, content: r.content }))
       const consolidated = consolidateBlocks(mapped)
       setBlocks(consolidated)
 
-      // Set initial collapse state: collapse all dates except today
       const today = format(new Date(), 'dd-MM-yyyy')
       const idsToCollapse = new Set<string>()
 
@@ -54,6 +58,26 @@ export function useBlocks(): UseBlocksReturn {
 
       setLoaded(true)
     })
+  }, [])
+
+  useEffect(() => {
+    loadBlocks()
+  }, [loadBlocks])
+
+  useEffect(() => {
+    if (reloadTrigger === undefined || reloadTrigger === 0) return
+    loadBlocks()
+  }, [reloadTrigger, loadBlocks])
+
+  useEffect(() => {
+    const unsubscribe = window.api.onFlushPendingSaves(async () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current)
+        saveTimeoutRef.current = null
+      }
+      await blockService.saveAll(blocksRef.current)
+    })
+    return unsubscribe
   }, [])
 
   useEffect(() => {

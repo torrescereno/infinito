@@ -18,6 +18,7 @@ export default function App(): React.JSX.Element {
   const [isMacOS, setIsMacOS] = useState(false)
   const [windowKind, setWindowKind] = useState<'main' | 'menubar'>('main')
   const [appMode, setAppMode] = useState<'normal' | 'menubar'>('normal')
+  const [reloadTrigger, setReloadTrigger] = useState(0)
   const isMenubarWindow = windowKind === 'menubar'
   const activeView: View = isMenubarWindow ? 'daily' : view
 
@@ -33,7 +34,7 @@ export default function App(): React.JSX.Element {
     addNewDay,
     toggleCollapse,
     deleteGroup
-  } = useBlocks()
+  } = useBlocks(reloadTrigger)
 
   const { settings, setFontSize, setFontFamily, setCodeTheme, setLigatures, setVimMode } =
     useSettings()
@@ -110,6 +111,9 @@ export default function App(): React.JSX.Element {
 
     const unsubscribeAppModeChanged = window.api.onAppModeChanged((mode) => {
       setAppMode(mode)
+      if (mode === 'normal') {
+        setReloadTrigger((prev) => prev + 1)
+      }
       if (mode === 'menubar') {
         setView('daily')
       }

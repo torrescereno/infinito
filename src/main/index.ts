@@ -261,33 +261,63 @@ function createTray(): void {
   })
 }
 
-function setAppMode(mode: AppMode): AppMode {
-  if (!isMac) return 'normal'
+function flushMenubarSaves(): Promise<void> {
+  return new Promise((resolve) => {
+    if (!menubarWindow || menubarWindow.isDestroyed()) {
+      resolve()
+      return
+    }
+
+    const timeout = setTimeout(() => resolve(), 2000)
+
+    ipcMain.once('blocks:flushed', () => {
+      clearTimeout(timeout)
+      resolve()
+    })
+
+    menubarWindow.webContents.send('app:flush-pending-saves')
+  })
+}
+
+function setAppMode(mode: AppMode): Promise<AppMode> {
+  if (!isMac) return Promise.resolve('normal')
 
   store.set('appMode', mode)
 
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('app:mode-changed', mode)
-  }
+  const finish = (): AppMode => {
+    if (mode === 'menubar') {
+      createTray()
+      createMenubarWindow()
+      app.dock?.hide()
+      mainWindow?.hide()
 
-  if (menubarWindow && !menubarWindow.isDestroyed()) {
-    menubarWindow.webContents.send('app:mode-changed', mode)
-  }
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('app:mode-changed', mode)
+      }
+      if (menubarWindow && !menubarWindow.isDestroyed()) {
+        menubarWindow.webContents.send('app:mode-changed', mode)
+      }
 
-  if (mode === 'menubar') {
-    createTray()
-    createMenubarWindow()
-    app.dock?.hide()
-    mainWindow?.hide()
+      return mode
+    }
+
+    destroyMenubarWindow()
+    destroyTray()
+    app.dock?.show()
+    openNormalAppWindow()
+
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('app:mode-changed', mode)
+    }
+
     return mode
   }
 
-  destroyMenubarWindow()
-  destroyTray()
-  app.dock?.show()
-  openNormalAppWindow()
+  if (mode === 'normal' && menubarWindow && !menubarWindow.isDestroyed()) {
+    return flushMenubarSaves().then(() => finish())
+  }
 
-  return mode
+  return Promise.resolve(finish())
 }
 
 function createMainWindow(showOnReady: boolean): void {
@@ -460,7 +490,7 @@ if (!gotTheLock) {
       return getAppMode()
     })
 
-    ipcMain.handle('app:set-mode', (_event, mode: AppMode) => {
+    ipcMain.handle('app:set-mode', async (_event, mode: AppMode) => {
       if (mode !== 'normal' && mode !== 'menubar') {
         return getAppMode()
       }
