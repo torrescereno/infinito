@@ -272,7 +272,7 @@ export function runBrewUpgrade(): void {
     'sh',
     [
       '-c',
-      `${brewPath} upgrade --cask infinito 2>&1 && sleep 1 && open -a "Infinito"`
+      `${brewPath} update 2>&1 && ${brewPath} upgrade --cask infinito 2>&1 && sleep 1 && open -a "Infinito"`
     ],
     { detached: true, stdio: 'ignore' }
   )
