@@ -12,7 +12,9 @@ vi.mock('date-fns', () => ({
 
 describe('useBlocks', () => {
   beforeEach(() => {
-    localStorage.clear()
+    try {
+      localStorage.clear()
+    } catch {}
     vi.clearAllMocks()
     vi.mocked(window.api.getBlocks).mockReset()
     vi.mocked(window.api.getBlocks).mockResolvedValue([])

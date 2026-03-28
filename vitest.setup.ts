@@ -1,6 +1,33 @@
 import '@testing-library/jest-dom/vitest'
 import { vi, afterEach } from 'vitest'
 
+// Polyfill localStorage for Node.js 25+ (native localStorage lacks methods without --localstorage-file)
+const localStorageMock = (() => {
+  let store: Record<string, string> = {}
+  return {
+    getItem: (key: string): string | null => store[key] ?? null,
+    setItem: (key: string, value: string): void => {
+      store[key] = String(value)
+    },
+    removeItem: (key: string): void => {
+      delete store[key]
+    },
+    clear: (): void => {
+      store = {}
+    },
+    get length(): number {
+      return Object.keys(store).length
+    },
+    key: (index: number): string | null => Object.keys(store)[index] ?? null
+  }
+})()
+
+Object.defineProperty(globalThis, 'localStorage', {
+  value: localStorageMock,
+  writable: true,
+  configurable: true
+})
+
 // Mock Electron main process modules
 vi.mock('electron', () => ({
   app: {
@@ -51,6 +78,9 @@ const apiMock = {
   setAppMode: vi.fn(() => Promise.resolve('normal')),
   openNormalWindow: vi.fn(() => Promise.resolve(true)),
   openExternal: vi.fn(() => Promise.resolve(true)),
+  onShowNotes: vi.fn(() => () => undefined),
+  onAppModeChanged: vi.fn(() => () => undefined),
+  onFlushPendingSaves: vi.fn(() => () => undefined),
   update: {
     check: vi.fn(() => Promise.resolve(true)),
     getStatus: vi.fn(() => Promise.resolve({ available: false })),
