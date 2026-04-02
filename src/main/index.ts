@@ -1,5 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain, nativeImage, Tray, Menu } from 'electron'
 import { join } from 'path'
+import { URL } from 'url'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
 import { initDatabase, closeDatabase } from '../database/client'
@@ -33,6 +34,23 @@ const store = new Store<StoreSchema>({
 })
 
 const isMac = process.platform === 'darwin'
+
+const ALLOWED_EXTERNAL_PROTOCOLS = ['https:', 'http:']
+
+function safeOpenExternal(url: string): boolean {
+  try {
+    const parsed = new URL(url)
+    if (!ALLOWED_EXTERNAL_PROTOCOLS.includes(parsed.protocol)) {
+      console.warn(`[Security] Blocked openExternal with protocol: ${parsed.protocol}`)
+      return false
+    }
+    shell.openExternal(url)
+    return true
+  } catch {
+    console.warn('[Security] Blocked openExternal with invalid URL')
+    return false
+  }
+}
 
 let mainWindow: BrowserWindow | null = null
 let menubarWindow: BrowserWindow | null = null
@@ -143,7 +161,9 @@ function createMenubarWindow(): void {
     visualEffectState: 'active',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
       additionalArguments: ['--window-kind=menubar']
     }
   })
@@ -164,7 +184,7 @@ function createMenubarWindow(): void {
   })
 
   menubarWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
+    safeOpenExternal(details.url)
     return { action: 'deny' }
   })
 
@@ -343,7 +363,9 @@ function createMainWindow(showOnReady: boolean): void {
     resizable: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
+      sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
       additionalArguments: ['--window-kind=main']
     }
   })
@@ -368,7 +390,7 @@ function createMainWindow(showOnReady: boolean): void {
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
+    safeOpenExternal(details.url)
     return { action: 'deny' }
   })
 
@@ -504,8 +526,7 @@ if (!gotTheLock) {
     })
 
     ipcMain.handle('app:open-external', (_event, url: string) => {
-      shell.openExternal(url)
-      return true
+      return safeOpenExternal(url)
     })
 
     ipcMain.handle('update:check', () => {

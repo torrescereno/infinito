@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useId } from 'react'
 import mermaid from 'mermaid'
+import DOMPurify from 'dompurify'
 
 let mermaidInitialized = false
 
@@ -40,7 +41,12 @@ export function MermaidDiagram({ content }: MermaidDiagramProps): React.JSX.Elem
       try {
         const { svg } = await mermaid.render(`mermaid_${uniqueId}`, content)
         if (!cancelled && containerRef.current) {
-          containerRef.current.innerHTML = svg
+          const sanitized = DOMPurify.sanitize(svg, {
+            USE_PROFILES: { svg: true, svgFilters: true },
+            FORBID_TAGS: ['script', 'iframe', 'object', 'embed'],
+            FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover']
+          })
+          containerRef.current.innerHTML = sanitized
           setError(null)
         }
       } catch (err) {
