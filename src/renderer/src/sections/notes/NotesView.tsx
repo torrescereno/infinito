@@ -119,18 +119,20 @@ export function NotesView(): React.JSX.Element {
 
       <div className="flex-1 overflow-y-auto">
         {mode === 'edit' ? (
-          <textarea
-            ref={textareaRef}
-            key={activeSessionId}
-            value={activeContent}
-            onChange={handleChange}
-            onPaste={handlePaste}
-            onKeyDown={handleKeyDown}
-            className="w-full h-full bg-transparent outline-none resize-none text-zinc-300 font-mono leading-relaxed p-4 placeholder:text-zinc-700"
-            style={{ fontSize: 'var(--app-font-size)', minHeight: '100%' }}
-            placeholder="Start writing..."
-            spellCheck={false}
-          />
+          <div className="max-w-2xl mx-auto p-4 h-full">
+            <textarea
+              ref={textareaRef}
+              key={activeSessionId}
+              value={activeContent}
+              onChange={handleChange}
+              onPaste={handlePaste}
+              onKeyDown={handleKeyDown}
+              className="w-full h-full bg-transparent outline-none resize-none text-zinc-300 font-mono leading-relaxed placeholder:text-zinc-700"
+              style={{ fontSize: 'var(--app-font-size)', minHeight: '100%' }}
+              placeholder="Start writing..."
+              spellCheck={false}
+            />
+          </div>
         ) : (
           <div className="max-w-2xl mx-auto p-4">
             {activeContent ? (
