@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/blas-works/infinito/compare/v1.9.2...v1.10.0) (2026-04-02)
+
+
+### Features
+
+* integrate DOMPurify for enhanced security in MermaidDiagram component and update CI/CD permissions ([2e00e52](https://github.com/blas-works/infinito/commit/2e00e52ff6fd29695660d0ae2850d4dc2d5b4449))
+
 ## [1.9.2](https://github.com/blas-works/infinito/compare/v1.9.1...v1.9.2) (2026-03-28)
 
 
