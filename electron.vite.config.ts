@@ -1,6 +1,6 @@
 import { resolve, join } from 'path'
 import { cpSync, existsSync, readFileSync } from 'fs'
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
+import { defineConfig } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import nodeResolve from '@rollup/plugin-node-resolve'
@@ -36,18 +36,22 @@ function excalidrawFontsPlugin(): Plugin {
 
 export default defineConfig({
   main: {
-    plugins: [
-      externalizeDepsPlugin({ exclude: ['drizzle-orm'] }),
-      nodeResolve({ exportConditions: ['node'] })
-    ],
+    plugins: [nodeResolve({ exportConditions: ['node'] })],
     build: {
+      externalizeDeps: {
+        exclude: ['drizzle-orm']
+      },
       rollupOptions: {
         external: ['better-sqlite3']
       }
     }
   },
   preload: {
-    plugins: [externalizeDepsPlugin()]
+    build: {
+      externalizeDeps: {
+        exclude: ['@electron-toolkit/preload']
+      }
+    }
   },
   renderer: {
     resolve: {
