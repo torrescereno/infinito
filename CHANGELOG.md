@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/blas-works/infinito/compare/v1.10.0...v1.10.1) (2026-04-02)
+
+
+### Code Refactoring
+
+* remove externalizeDepsPlugin from main and preload configurations ([cee1f1c](https://github.com/blas-works/infinito/commit/cee1f1c5fa17c3016d08f9afacfecba60b126a7a))
+
 ## [1.10.0](https://github.com/blas-works/infinito/compare/v1.9.2...v1.10.0) (2026-04-02)
 
 
