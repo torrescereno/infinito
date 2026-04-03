@@ -1,6 +1,8 @@
 import { app, dialog, shell, BrowserWindow } from 'electron'
 import { spawn } from 'child_process'
-import { accessSync, constants as fsConstants } from 'fs'
+import { accessSync, chmodSync, constants as fsConstants, writeFileSync } from 'fs'
+import { tmpdir } from 'os'
+import { join } from 'path'
 import { autoUpdater } from 'electron-updater'
 import { is } from '@electron-toolkit/utils'
 import type Store from 'electron-store'
@@ -264,25 +266,34 @@ export function runBrewUpgrade(): void {
     return
   }
 
-  // Spawn a detached process that:
-  // 1. Runs brew upgrade --cask
-  // 2. Reopens the app after brew finishes
-  // This process survives even if brew force-quits the Electron app
-  const child = spawn(
-    'sh',
-    [
-      '-c',
-      `${brewPath} update 2>&1 && ${brewPath} upgrade --cask infinito 2>&1 && sleep 1 && open -a "Infinito"`
-    ],
-    { detached: true, stdio: 'ignore' }
-  )
-  child.unref()
+  const scriptContent = [
+    '#!/bin/bash',
+    'exec > /tmp/infinito-update.log 2>&1',
+    'echo "Starting Infinito update at $(date)"',
+    'sleep 3',
+    'echo "Running brew update..."',
+    `"${brewPath}" update`,
+    'echo "Running brew upgrade --cask infinito..."',
+    `"${brewPath}" upgrade --cask infinito`,
+    'echo "Update complete. Reopening Infinito..."',
+    'sleep 1',
+    'open -a "Infinito"',
+    'echo "Cleaning up..."',
+    'rm -f "$0"'
+  ].join('\n')
 
-  // Give the UI a moment to show "Updating..." then quit gracefully
-  // so brew doesn't need to force-kill the process
+  const scriptPath = join(tmpdir(), 'infinito-update.sh')
+  writeFileSync(scriptPath, scriptContent)
+  chmodSync(scriptPath, 0o755)
+
+  spawn('bash', ['-c', `nohup "${scriptPath}" >/dev/null 2>&1 &`], {
+    detached: true,
+    stdio: 'ignore'
+  }).unref()
+
   setTimeout(() => {
-    app.exit(0)
-  }, 1000)
+    app.quit()
+  }, 500)
 }
 
 export function snoozeCriticalRestart(): void {
