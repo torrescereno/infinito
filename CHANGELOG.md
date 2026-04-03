@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/blas-works/infinito/compare/v1.11.1...v1.12.0) (2026-04-03)
+
+
+### Features
+
+* vista de actualizacion mac ([75bf2b4](https://github.com/blas-works/infinito/commit/75bf2b48fb44baa9506ab6d17e84ac502ff2a4ea))
+
 ## [1.11.1](https://github.com/blas-works/infinito/compare/v1.11.0...v1.11.1) (2026-04-03)
 
 
