@@ -35,6 +35,13 @@ const api = {
       ipcRenderer.removeListener('app:mode-changed', handler)
     }
   },
+  onReloadData: (callback: () => void): (() => void) => {
+    const handler = (): void => callback()
+    ipcRenderer.on('app:reload-data', handler)
+    return (): void => {
+      ipcRenderer.removeListener('app:reload-data', handler)
+    }
+  },
   onFlushPendingSaves: (callback: () => Promise<void>): (() => void) => {
     const handler = async (): Promise<void> => {
       await callback()

@@ -46,6 +46,23 @@ export function useNoteSessions(): UseNoteSessionsReturn {
     localStorage.setItem(REGISTRY_KEY, JSON.stringify(registry))
   }, [registry])
 
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent): void => {
+      if (e.key === REGISTRY_KEY && e.newValue) {
+        const incoming = JSON.parse(e.newValue) as NoteSessionRegistry
+        setRegistry(incoming)
+        setContent(loadSessionContent(incoming.activeSessionId))
+      } else if (
+        e.key?.startsWith(NOTE_PREFIX) &&
+        e.key === `${NOTE_PREFIX}${registry.activeSessionId}`
+      ) {
+        setContent(e.newValue ?? '')
+      }
+    }
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
+  }, [registry.activeSessionId])
+
   const setActiveSession = useCallback((id: string) => {
     setRegistry((prev) => {
       if (prev.activeSessionId === id) return prev

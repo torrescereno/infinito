@@ -520,8 +520,12 @@ if (!gotTheLock) {
       return setAppMode(mode)
     })
 
-    ipcMain.handle('app:open-normal-window', () => {
+    ipcMain.handle('app:open-normal-window', async () => {
+      await flushMenubarSaves()
       openNormalAppWindow()
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('app:reload-data')
+      }
       return true
     })
 

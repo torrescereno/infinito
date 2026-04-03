@@ -119,9 +119,14 @@ export default function App(): React.JSX.Element {
       }
     })
 
+    const unsubscribeReloadData = window.api.onReloadData(() => {
+      setReloadTrigger((prev) => prev + 1)
+    })
+
     return () => {
       unsubscribeShowNotes()
       unsubscribeAppModeChanged()
+      unsubscribeReloadData()
     }
   }, [])
 
