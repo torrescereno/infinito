@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.2](https://github.com/blas-works/infinito/compare/v1.10.1...v1.10.2) (2026-04-03)
+
+
+### Bug Fixes
+
+* update ([375782d](https://github.com/blas-works/infinito/commit/375782dc8dd6ee8a35a0987ad2e001d4e3280b98))
+* wrap textarea in a container for improved layout in edit mode ([3b4e860](https://github.com/blas-works/infinito/commit/3b4e8604cceacbb6e26e438ea1b699e1605cf716))
+
 ## [1.10.1](https://github.com/blas-works/infinito/compare/v1.10.0...v1.10.1) (2026-04-02)
 
 
