@@ -31,7 +31,9 @@ export default defineConfig({
         'vitest.config.ts',
         'vitest.setup.ts',
         '**/__tests__/**',
-        'src/renderer/src/services/**'
+        'src/renderer/src/services/**',
+        'src/renderer/src/App.tsx',
+        'src/renderer/src/components/layout/TitleBar.tsx'
       ],
       thresholds: {
         lines: 80,

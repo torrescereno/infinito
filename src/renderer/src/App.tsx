@@ -20,7 +20,7 @@ export default function App(): React.JSX.Element {
   const [appMode, setAppMode] = useState<'normal' | 'menubar'>('normal')
   const [reloadTrigger, setReloadTrigger] = useState(0)
   const isMenubarWindow = windowKind === 'menubar'
-  const activeView: View = isMenubarWindow ? 'daily' : view
+  const activeView: View = view
 
   const {
     blocks,
@@ -185,15 +185,13 @@ export default function App(): React.JSX.Element {
       <main
         className={cn(
           'flex-1',
-          !isMenubarWindow && (activeView === 'canvas' || activeView === 'notes')
-            ? 'overflow-hidden'
-            : 'overflow-y-auto'
+          activeView === 'canvas' || activeView === 'notes' ? 'overflow-hidden' : 'overflow-y-auto'
         )}
       >
         <AnimatePresence mode="wait">
           {!isMenubarWindow && activeView === 'canvas' ? (
             <CanvasView />
-          ) : !isMenubarWindow && activeView === 'notes' ? (
+          ) : activeView === 'notes' ? (
             <NotesView />
           ) : (
             <div className="max-w-2xl mx-auto px-4 pt-5">
