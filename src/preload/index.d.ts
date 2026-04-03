@@ -16,6 +16,10 @@ interface UpdateStatusInfo {
   message?: string
   progress?: number
   downloaded?: boolean
+  brewUpdate?: boolean
+  brewUpdating?: boolean
+  brewStep?: 'preparing' | 'updating-brew' | 'downloading' | 'installing' | 'restarting'
+  brewError?: string
 }
 
 interface UpdateAPI {

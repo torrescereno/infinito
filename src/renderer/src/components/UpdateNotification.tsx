@@ -26,7 +26,8 @@ export function UpdateNotification({
   }, [updateInfo])
 
   useEffect(() => {
-    if (!updateInfo?.available || updateInfo.priority !== 'critical' || updateInfo.brewUpdate) return
+    if (!updateInfo?.available || updateInfo.priority !== 'critical' || updateInfo.brewUpdate)
+      return
 
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -274,11 +275,7 @@ function BrewUpdateBanner({
     : isSecurity
       ? 'bg-orange-950/90 border-orange-900/30'
       : 'bg-zinc-900/90 border-zinc-800/50'
-  const textColor = isCritical
-    ? 'text-red-200'
-    : isSecurity
-      ? 'text-orange-200'
-      : 'text-zinc-300'
+  const textColor = isCritical ? 'text-red-200' : isSecurity ? 'text-orange-200' : 'text-zinc-300'
   const versionColor = isCritical
     ? 'text-red-400/60'
     : isSecurity
@@ -294,11 +291,7 @@ function BrewUpdateBanner({
     : isSecurity
       ? 'bg-orange-900/50 text-orange-200 hover:bg-orange-900/70'
       : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
-  const iconColor = isCritical
-    ? 'text-red-400'
-    : isSecurity
-      ? 'text-orange-400'
-      : 'text-zinc-400'
+  const iconColor = isCritical ? 'text-red-400' : isSecurity ? 'text-orange-400' : 'text-zinc-400'
   const errorColor = isCritical
     ? 'text-red-400/60'
     : isSecurity
@@ -363,9 +356,7 @@ function BrewUpdateBanner({
       </div>
 
       {hasError && (
-        <span className={`${errorColor} text-[10px] pl-5.5`}>
-          {updateInfo.brewError}
-        </span>
+        <span className={`${errorColor} text-[10px] pl-5.5`}>{updateInfo.brewError}</span>
       )}
     </div>
   )

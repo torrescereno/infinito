@@ -2,5 +2,6 @@ export type {
   UpdatePriority,
   UpdateMetadata,
   UpdateInfo,
-  PendingUpdate
+  PendingUpdate,
+  BrewStep
 } from '../../../shared/types'

@@ -86,7 +86,7 @@ const apiMock = {
     getStatus: vi.fn(() => Promise.resolve({ available: false })),
     restart: vi.fn(() => Promise.resolve(true)),
     snooze: vi.fn(() => Promise.resolve(true)),
-    openDMG: vi.fn(() => Promise.resolve(true)),
+    brewUpgrade: vi.fn(() => Promise.resolve(true)),
     onStatus: vi.fn(() => () => undefined)
   }
 }

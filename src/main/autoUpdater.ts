@@ -249,7 +249,12 @@ export function forceRestart(): void {
 export function runBrewUpgrade(): void {
   if (process.platform !== 'darwin') return
 
-  sendUpdateStatus({ ...lastStatus, brewUpdating: true, brewError: undefined })
+  sendUpdateStatus({
+    ...lastStatus,
+    brewUpdating: true,
+    brewStep: 'preparing',
+    brewError: undefined
+  })
 
   const brewPaths = ['/opt/homebrew/bin/brew', '/usr/local/bin/brew']
   const brewPath = brewPaths.find((p) => {
@@ -266,10 +271,71 @@ export function runBrewUpgrade(): void {
     return
   }
 
+  runBrewSteps(brewPath)
+}
+
+function runBrewSteps(brewPath: string): void {
+  sendUpdateStatus({ ...lastStatus, brewUpdating: true, brewStep: 'updating-brew' })
+
+  const brewUpdate = spawn(brewPath, ['update'], { stdio: ['ignore', 'pipe', 'pipe'] })
+
+  let brewUpdateOutput = ''
+  brewUpdate.stdout.on('data', (data: Buffer) => {
+    brewUpdateOutput += data.toString()
+  })
+  brewUpdate.stderr.on('data', (data: Buffer) => {
+    brewUpdateOutput += data.toString()
+  })
+
+  brewUpdate.on('close', (updateCode) => {
+    if (updateCode !== 0) {
+      console.error('[AutoUpdater] brew update failed:', brewUpdateOutput)
+      fallbackToBackgroundScript(brewPath)
+      return
+    }
+
+    sendUpdateStatus({ ...lastStatus, brewUpdating: true, brewStep: 'downloading' })
+
+    const brewUpgrade = spawn(brewPath, ['upgrade', '--cask', 'infinito'], {
+      stdio: ['ignore', 'pipe', 'pipe']
+    })
+
+    let upgradeOutput = ''
+    brewUpgrade.stdout.on('data', (data: Buffer) => {
+      const chunk = data.toString()
+      upgradeOutput += chunk
+      if (chunk.includes('Installing') || chunk.includes('Moving')) {
+        sendUpdateStatus({ ...lastStatus, brewUpdating: true, brewStep: 'installing' })
+      }
+    })
+    brewUpgrade.stderr.on('data', (data: Buffer) => {
+      upgradeOutput += data.toString()
+    })
+
+    brewUpgrade.on('close', (upgradeCode) => {
+      if (upgradeCode !== 0) {
+        console.error('[AutoUpdater] brew upgrade failed:', upgradeOutput)
+        fallbackToBackgroundScript(brewPath)
+        return
+      }
+
+      sendUpdateStatus({ ...lastStatus, brewUpdating: true, brewStep: 'restarting' })
+
+      setTimeout(() => {
+        app.relaunch()
+        app.quit()
+      }, 1000)
+    })
+  })
+}
+
+function fallbackToBackgroundScript(brewPath: string): void {
+  console.log('[AutoUpdater] Falling back to background update script')
+
   const scriptContent = [
     '#!/bin/bash',
     'exec > /tmp/infinito-update.log 2>&1',
-    'echo "Starting Infinito update at $(date)"',
+    'echo "Starting Infinito fallback update at $(date)"',
     'sleep 3',
     'echo "Running brew update..."',
     `"${brewPath}" update`,
@@ -290,6 +356,8 @@ export function runBrewUpgrade(): void {
     detached: true,
     stdio: 'ignore'
   }).unref()
+
+  sendUpdateStatus({ ...lastStatus, brewUpdating: true, brewStep: 'restarting' })
 
   setTimeout(() => {
     app.quit()

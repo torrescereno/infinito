@@ -1,5 +1,7 @@
 export type UpdatePriority = 'normal' | 'security' | 'critical'
 
+export type BrewStep = 'preparing' | 'updating-brew' | 'downloading' | 'installing' | 'restarting'
+
 export interface UpdateMetadata {
   version: string
   priority: UpdatePriority
@@ -17,6 +19,7 @@ export interface UpdateInfo {
   downloaded?: boolean
   brewUpdate?: boolean
   brewUpdating?: boolean
+  brewStep?: BrewStep
   brewError?: string
 }
 

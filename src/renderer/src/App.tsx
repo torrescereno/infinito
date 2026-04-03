@@ -6,6 +6,7 @@ import { useBlocks, useSettings, useUpdate, useVimMode } from '@renderer/hooks'
 import { cn } from '@renderer/lib/utils'
 import { TitleBar } from '@renderer/components/layout'
 import { UpdateNotification } from '@renderer/components/UpdateNotification'
+import { BrewUpdateOverlay } from '@renderer/components/BrewUpdateOverlay'
 import { DailyView } from '@renderer/sections/daily'
 import { NotesView } from '@renderer/sections/notes'
 import { ConfigView } from '@renderer/sections/config'
@@ -152,6 +153,8 @@ export default function App(): React.JSX.Element {
     await windowService.openNormalWindow()
   }
 
+  const showBrewOverlay = updateInfo?.brewUpdating === true && !!updateInfo.brewStep
+
   if (!loaded) {
     return (
       <div className="flex h-screen items-center justify-center bg-zinc-950 rounded-lg overflow-hidden" />
@@ -159,81 +162,88 @@ export default function App(): React.JSX.Element {
   }
 
   return (
-    <div
-      className="relative flex flex-col h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-zinc-800 rounded-lg overflow-hidden"
-      style={{ fontFamily: 'var(--app-font-family)' }}
-    >
-      <TitleBar
-        view={activeView}
-        isMenubarWindow={isMenubarWindow}
-        isPinned={isPinned}
-        vimMode={settings.vimMode}
-        vimLevel={vimLevel}
-        onViewChange={setView}
-        onTogglePin={handleTogglePin}
-        onSwitchToNormalMode={handleSwitchToNormalMode}
-        onOpenNormalApp={(): void => {
-          void handleOpenNormalApp()
-        }}
-      />
-
-      {!isMenubarWindow && (
-        <UpdateNotification
-          updateInfo={updateInfo}
-          onRestart={restartNow}
-          onSnooze={snoozeUpdate}
-          onBrewUpgrade={brewUpgrade}
-          onDismiss={dismissUpdate}
-        />
+    <>
+      {showBrewOverlay && (
+        <BrewUpdateOverlay step={updateInfo.brewStep} version={updateInfo.version} />
       )}
-
-      <main
-        className={cn(
-          'flex-1',
-          activeView === 'canvas' || activeView === 'notes' ? 'overflow-hidden' : 'overflow-y-auto'
-        )}
+      <div
+        className="relative flex flex-col h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-zinc-800 rounded-lg overflow-hidden"
+        style={{ fontFamily: 'var(--app-font-family)' }}
       >
-        <AnimatePresence mode="wait">
-          {!isMenubarWindow && activeView === 'canvas' ? (
-            <CanvasView />
-          ) : activeView === 'notes' ? (
-            <NotesView />
-          ) : (
-            <div className="max-w-2xl mx-auto px-4 pt-5">
-              {!isMenubarWindow && activeView === 'config' ? (
-                <ConfigView
-                  settings={settings}
-                  isMacOS={isMacOS}
-                  appMode={appMode}
-                  onFontSize={setFontSize}
-                  onFontFamily={setFontFamily}
-                  onCodeTheme={setCodeTheme}
-                  onLigatures={setLigatures}
-                  onVimMode={setVimMode}
-                  onAppMode={handleAppModeChange}
-                  onCheckUpdate={checkForUpdates}
-                  updateInfo={updateInfo}
-                  version={version}
-                />
-              ) : (
-                <DailyView
-                  groupedBlocks={groupedBlocks}
-                  focusedId={focusedId}
-                  collapsedIds={collapsedIds}
-                  highlightedId={highlightedId}
-                  onFocus={setFocusedId}
-                  onUpdate={updateBlock}
-                  onAddBlock={addBlock}
-                  onAddDay={addNewDay}
-                  onToggleCollapse={toggleCollapse}
-                  onDeleteGroup={deleteGroup}
-                  isEmpty={blocks.length === 0}
-                />
-              )}
-            </div>
+        <TitleBar
+          view={activeView}
+          isMenubarWindow={isMenubarWindow}
+          isPinned={isPinned}
+          vimMode={settings.vimMode}
+          vimLevel={vimLevel}
+          onViewChange={setView}
+          onTogglePin={handleTogglePin}
+          onSwitchToNormalMode={handleSwitchToNormalMode}
+          onOpenNormalApp={(): void => {
+            void handleOpenNormalApp()
+          }}
+        />
+
+        {!isMenubarWindow && (
+          <UpdateNotification
+            updateInfo={updateInfo}
+            onRestart={restartNow}
+            onSnooze={snoozeUpdate}
+            onBrewUpgrade={brewUpgrade}
+            onDismiss={dismissUpdate}
+          />
+        )}
+
+        <main
+          className={cn(
+            'flex-1',
+            activeView === 'canvas' || activeView === 'notes'
+              ? 'overflow-hidden'
+              : 'overflow-y-auto'
           )}
-        </AnimatePresence>
-      </main>
-    </div>
+        >
+          <AnimatePresence mode="wait">
+            {!isMenubarWindow && activeView === 'canvas' ? (
+              <CanvasView />
+            ) : activeView === 'notes' ? (
+              <NotesView />
+            ) : (
+              <div className="max-w-2xl mx-auto px-4 pt-5">
+                {!isMenubarWindow && activeView === 'config' ? (
+                  <ConfigView
+                    settings={settings}
+                    isMacOS={isMacOS}
+                    appMode={appMode}
+                    onFontSize={setFontSize}
+                    onFontFamily={setFontFamily}
+                    onCodeTheme={setCodeTheme}
+                    onLigatures={setLigatures}
+                    onVimMode={setVimMode}
+                    onAppMode={handleAppModeChange}
+                    onCheckUpdate={checkForUpdates}
+                    updateInfo={updateInfo}
+                    version={version}
+                  />
+                ) : (
+                  <DailyView
+                    groupedBlocks={groupedBlocks}
+                    focusedId={focusedId}
+                    collapsedIds={collapsedIds}
+                    highlightedId={highlightedId}
+                    onFocus={setFocusedId}
+                    onUpdate={updateBlock}
+                    onAddBlock={addBlock}
+                    onAddDay={addNewDay}
+                    onToggleCollapse={toggleCollapse}
+                    onDeleteGroup={deleteGroup}
+                    isEmpty={blocks.length === 0}
+                  />
+                )}
+              </div>
+            )}
+          </AnimatePresence>
+        </main>
+      </div>
+    </>
   )
 }

@@ -1,6 +1,6 @@
 export type { View, Block, BlockData, DateGroup } from './block'
 export type { FontSize, FontFamily, CodeTheme, CodeThemeOption, Settings } from './settings'
 export { FONT_SIZES, FONT_FAMILIES, CODE_THEMES, DEFAULT_SETTINGS } from './settings'
-export type { UpdatePriority, UpdateMetadata, UpdateInfo, PendingUpdate } from './update'
+export type { UpdatePriority, UpdateMetadata, UpdateInfo, PendingUpdate, BrewStep } from './update'
 export type { CanvasSession, CanvasSessionRegistry } from './canvas'
 export type { NoteSession, NoteSessionRegistry } from './note'
