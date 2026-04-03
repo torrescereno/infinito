@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/blas-works/infinito/compare/v1.11.0...v1.11.1) (2026-04-03)
+
+
+### Bug Fixes
+
+* issue 32 actualizacion de info entre tray y open app ([eafef26](https://github.com/blas-works/infinito/commit/eafef26b7b6252ab2c3d3bcd7bbbc5567b46d8f9))
+
 ## [1.11.0](https://github.com/blas-works/infinito/compare/v1.10.2...v1.11.0) (2026-04-03)
 
 
