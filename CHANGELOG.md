@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/blas-works/infinito/compare/v1.10.2...v1.11.0) (2026-04-03)
+
+
+### Features
+
+* se agrega notas en tray ([43482c3](https://github.com/blas-works/infinito/commit/43482c343d4c52f513e494f35d3dc3efb22f9da5))
+
 ## [1.10.2](https://github.com/blas-works/infinito/compare/v1.10.1...v1.10.2) (2026-04-03)
 
 
