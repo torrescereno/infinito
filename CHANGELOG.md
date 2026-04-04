@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.14.0](https://github.com/blas-works/infinito/compare/v1.13.1...v1.14.0) (2026-04-04)
+
+
+### Features
+
+* actualizacion readme ([01f2583](https://github.com/blas-works/infinito/commit/01f2583f8ac684a797e4b62156b7421e07036d93))
+
+
+### Bug Fixes
+
+* vista mac ([6609a85](https://github.com/blas-works/infinito/commit/6609a85ec18597dae524e5f220dddc3c52df9c79))
+
 ## [1.13.1](https://github.com/blas-works/infinito/compare/v1.13.0...v1.13.1) (2026-04-04)
 
 
