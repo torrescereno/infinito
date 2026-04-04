@@ -35,7 +35,6 @@ export interface Settings {
   fontFamily: FontFamily
   codeTheme: CodeTheme
   ligatures: boolean
-  vimMode: boolean
 }
 
 export const FONT_SIZES: FontSize[] = [11, 12, 13, 14, 15, 16, 17]
@@ -94,6 +93,5 @@ export const DEFAULT_SETTINGS: Settings = {
   fontSize: 12,
   fontFamily: 'inter',
   codeTheme: 'zinc',
-  ligatures: false,
-  vimMode: false
+  ligatures: false
 }

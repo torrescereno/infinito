@@ -65,8 +65,7 @@ describe('DEFAULT_SETTINGS', () => {
       fontSize: 12,
       fontFamily: 'inter',
       codeTheme: 'zinc',
-      ligatures: false,
-      vimMode: false
+      ligatures: false
     })
   })
 
@@ -84,8 +83,7 @@ describe('Settings type', () => {
       fontSize: 14,
       fontFamily: 'jetbrains',
       codeTheme: 'tokyo-night',
-      ligatures: false,
-      vimMode: false
+      ligatures: false
     }
     expect(settings.fontSize).toBe(14)
     expect(settings.fontFamily).toBe('jetbrains')

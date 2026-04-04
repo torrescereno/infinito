@@ -38,25 +38,24 @@
 
 ## ✨ Features
 
-| 📝 **Notes**                | Markdown support with syntax highlighting             |
-| :-------------------------- | :---------------------------------------------------- |
-|                             | Mermaid diagram rendering in code blocks              |
-|                             | Date-based organization with collapsible groups       |
-|                             | Vim mode for keyboard navigation (h/l, j/k, 1-4 tabs) |
-| 🎨 **Canvas**               | Excalidraw-powered infinite canvas                    |
-|                             | Multiple sessions with local persistence              |
-|                             | Shape tools, text elements, and freehand drawing      |
-| ⚙️ **Editor Configuration** | 8 font families (Inter, JetBrains, Fira Code, etc.)   |
-|                             | 7 font sizes (11-17px)                                |
-|                             | 12 syntax themes (Tokyo Night, Dracula, Nord, etc.)   |
-|                             | Ligatures toggle for programming fonts                |
-| 🖥️ **macOS Features**       | Menu bar mode for quick access                        |
-|                             | Always-on-top window pinning                          |
-| 🔄 **Automatic Updates**    | Smart updates with priority levels (normal/security)  |
-|                             | Manual check and snooze options                       |
-| 💾 **Local Storage**        | Private data stored locally, no cloud required        |
-|                             | SQLite database with Drizzle ORM                      |
-|                             | Offline-first design, privacy-focused                 |
+| 📝 **Notes**                | Markdown support with syntax highlighting            |
+| :-------------------------- | :--------------------------------------------------- |
+|                             | Mermaid diagram rendering in code blocks             |
+|                             | Date-based organization with collapsible groups      |
+| 🎨 **Canvas**               | Excalidraw-powered infinite canvas                   |
+|                             | Multiple sessions with local persistence             |
+|                             | Shape tools, text elements, and freehand drawing     |
+| ⚙️ **Editor Configuration** | 8 font families (Inter, JetBrains, Fira Code, etc.)  |
+|                             | 7 font sizes (11-17px)                               |
+|                             | 12 syntax themes (Tokyo Night, Dracula, Nord, etc.)  |
+|                             | Ligatures toggle for programming fonts               |
+| 🖥️ **macOS Features**       | Menu bar mode for quick access                       |
+|                             | Always-on-top window pinning                         |
+| 🔄 **Automatic Updates**    | Smart updates with priority levels (normal/security) |
+|                             | Manual check and snooze options                      |
+| 💾 **Local Storage**        | Private data stored locally, no cloud required       |
+|                             | SQLite database with Drizzle ORM                     |
+|                             | Offline-first design, privacy-focused                |
 
 ## 🚀 Installation
 

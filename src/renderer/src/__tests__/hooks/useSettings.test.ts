@@ -108,35 +108,6 @@ describe('useSettings', () => {
     expect(fontSize).toBe('14px')
   })
 
-  it('should set vim mode', () => {
-    const { result } = renderHook(() => useSettings())
-
-    act(() => {
-      result.current.setVimMode(true)
-    })
-
-    expect(result.current.settings.vimMode).toBe(true)
-
-    act(() => {
-      result.current.setVimMode(false)
-    })
-
-    expect(result.current.settings.vimMode).toBe(false)
-  })
-
-  it('should persist vim mode to localStorage', () => {
-    const { result } = renderHook(() => useSettings())
-
-    act(() => {
-      result.current.setVimMode(true)
-    })
-
-    const stored = localStorage.getItem('infinito-settings')
-    expect(stored).not.toBeNull()
-    const parsed = JSON.parse(stored!)
-    expect(parsed.vimMode).toBe(true)
-  })
-
   it('should apply font family to DOM', () => {
     const { result } = renderHook(() => useSettings())
 

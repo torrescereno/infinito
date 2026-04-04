@@ -28,12 +28,6 @@ export function NotesView(): React.JSX.Element {
     }
   }, [mode, activeSessionId])
 
-  useEffect(() => {
-    const handleEnterEdit = (): void => setMode('edit')
-    document.addEventListener('vim:enter-notes-edit', handleEnterEdit)
-    return () => document.removeEventListener('vim:enter-notes-edit', handleEnterEdit)
-  }, [])
-
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       updateContent(e.target.value)

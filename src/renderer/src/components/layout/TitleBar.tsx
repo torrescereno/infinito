@@ -9,8 +9,6 @@ interface TitleBarProps {
   isMacOS: boolean
   isMenubarWindow: boolean
   isPinned: boolean
-  vimMode?: boolean
-  vimLevel?: 'tabs' | 'view'
   onViewChange: (view: View) => void
   onTogglePin: () => void
   onSwitchToNormalMode: () => void
@@ -22,8 +20,6 @@ export function TitleBar({
   isMacOS,
   isMenubarWindow,
   isPinned,
-  vimMode,
-  vimLevel,
   onViewChange,
   onTogglePin,
   onSwitchToNormalMode,
@@ -129,16 +125,6 @@ export function TitleBar({
       </div>
 
       <div className="ml-auto no-drag flex items-center gap-0.5">
-        {vimMode && (
-          <span
-            className={cn(
-              'text-[9px] font-mono uppercase tracking-wider mr-1',
-              vimLevel === 'view' ? 'text-zinc-400' : 'text-zinc-600'
-            )}
-          >
-            {vimLevel === 'view' ? '-- INSERT --' : 'NORMAL'}
-          </span>
-        )}
         {!isMenubarWindow && (
           <>
             <Button
