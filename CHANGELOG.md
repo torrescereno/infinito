@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.1](https://github.com/blas-works/infinito/compare/v1.13.0...v1.13.1) (2026-04-04)
+
+
+### Bug Fixes
+
+* view mac ([5a832ba](https://github.com/blas-works/infinito/commit/5a832baec3341418a4f7e5b94bc01100117105a8))
+
 ## [1.13.0](https://github.com/blas-works/infinito/compare/v1.12.3...v1.13.0) (2026-04-04)
 
 
