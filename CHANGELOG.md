@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.2](https://github.com/blas-works/infinito/compare/v1.12.1...v1.12.2) (2026-04-04)
+
+
+### Bug Fixes
+
+* vista en mac y win ([1938330](https://github.com/blas-works/infinito/commit/1938330a728961db249998fb54625e1440d3f01f))
+
 ## [1.12.1](https://github.com/blas-works/infinito/compare/v1.12.0...v1.12.1) (2026-04-04)
 
 
