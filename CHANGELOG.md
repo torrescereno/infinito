@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.3](https://github.com/blas-works/infinito/compare/v1.12.2...v1.12.3) (2026-04-04)
+
+
+### Bug Fixes
+
+* tabs y ui de mac ([8a911bd](https://github.com/blas-works/infinito/commit/8a911bdd8663eb10e3231c99f84372e7f28c91dc))
+
 ## [1.12.2](https://github.com/blas-works/infinito/compare/v1.12.1...v1.12.2) (2026-04-04)
 
 
