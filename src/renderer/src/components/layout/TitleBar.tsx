@@ -6,6 +6,7 @@ import type { View } from '@renderer/types'
 
 interface TitleBarProps {
   view: View
+  isMacOS: boolean
   isMenubarWindow: boolean
   isPinned: boolean
   onViewChange: (view: View) => void
@@ -16,6 +17,7 @@ interface TitleBarProps {
 
 export function TitleBar({
   view,
+  isMacOS,
   isMenubarWindow,
   isPinned,
   onViewChange,
@@ -24,7 +26,12 @@ export function TitleBar({
   onOpenNormalApp
 }: TitleBarProps): React.JSX.Element {
   return (
-    <header className="drag-region sticky top-0 z-50 flex items-center justify-between px-3 py-2 bg-zinc-950 border-b border-zinc-900/50">
+    <header
+      className={cn(
+        'drag-region sticky top-0 z-50 flex items-center justify-between px-3 py-2 bg-zinc-950 border-b border-zinc-900/50',
+        isMacOS && 'pl-20'
+      )}
+    >
       <div className="no-drag flex items-center gap-1">
         {!isMenubarWindow && (
           <Button
@@ -117,39 +124,41 @@ export function TitleBar({
         )}
       </div>
 
-      <div className="ml-auto no-drag flex items-center gap-0.5">
-        {!isMenubarWindow && (
-          <>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => windowService.minimize()}
-              className="h-6 w-6 text-zinc-600 hover:text-zinc-300"
-              title="Minimize"
-            >
-              <Minus className="w-3 h-3" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => windowService.maximize()}
-              className="h-6 w-6 text-zinc-600 hover:text-zinc-300"
-              title="Maximize"
-            >
-              <Square className="w-3 h-3" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => windowService.close()}
-              className="h-6 w-6 text-zinc-600 hover:text-red-400"
-              title="Close"
-            >
-              <X className="w-3 h-3" />
-            </Button>
-          </>
-        )}
-      </div>
+      {!isMacOS && (
+        <div className="ml-auto no-drag flex items-center gap-0.5">
+          {!isMenubarWindow && (
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => windowService.minimize()}
+                className="h-6 w-6 text-zinc-600 hover:text-zinc-300"
+                title="Minimize"
+              >
+                <Minus className="w-3 h-3" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => windowService.maximize()}
+                className="h-6 w-6 text-zinc-600 hover:text-zinc-300"
+                title="Maximize"
+              >
+                <Square className="w-3 h-3" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => windowService.close()}
+                className="h-6 w-6 text-zinc-600 hover:text-red-400"
+                title="Close"
+              >
+                <X className="w-3 h-3" />
+              </Button>
+            </>
+          )}
+        </div>
+      )}
     </header>
   )
 }
