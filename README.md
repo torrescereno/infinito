@@ -38,24 +38,35 @@
 
 ## ✨ Features
 
-| 📝 **Notes**                | Markdown support with syntax highlighting            |
-| :-------------------------- | :--------------------------------------------------- |
-|                             | Mermaid diagram rendering in code blocks             |
-|                             | Date-based organization with collapsible groups      |
-| 🎨 **Canvas**               | Excalidraw-powered infinite canvas                   |
-|                             | Multiple sessions with local persistence             |
-|                             | Shape tools, text elements, and freehand drawing     |
-| ⚙️ **Editor Configuration** | 8 font families (Inter, JetBrains, Fira Code, etc.)  |
-|                             | 7 font sizes (11-17px)                               |
-|                             | 12 syntax themes (Tokyo Night, Dracula, Nord, etc.)  |
-|                             | Ligatures toggle for programming fonts               |
-| 🖥️ **macOS Features**       | Menu bar mode for quick access                       |
-|                             | Always-on-top window pinning                         |
-| 🔄 **Automatic Updates**    | Smart updates with priority levels (normal/security) |
-|                             | Manual check and snooze options                      |
-| 💾 **Local Storage**        | Private data stored locally, no cloud required       |
-|                             | SQLite database with Drizzle ORM                     |
-|                             | Offline-first design, privacy-focused                |
+| 📝 **Daily Notes**          | Markdown support with GFM (tables, strikethrough, task lists)                                                                                 |
+| :-------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+|                             | Syntax highlighting with rehype-highlight                                                                                                     |
+|                             | Mermaid diagram rendering in code blocks                                                                                                      |
+|                             | Date-based organization with collapsible groups                                                                                               |
+|                             | Search/filter with `Ctrl+P` / `Cmd+P` shortcut                                                                                                |
+|                             | Image paste from clipboard (auto base64)                                                                                                      |
+|                             | Interactive checkboxes in rendered markdown                                                                                                   |
+| 📄 **Notes**                | Full markdown editor with edit/preview toggle                                                                                                 |
+|                             | Multiple named sessions with scrollable tabs                                                                                                  |
+|                             | Create, rename, and delete note documents                                                                                                     |
+| 🎨 **Canvas**               | Excalidraw-powered infinite canvas                                                                                                            |
+|                             | Multiple named sessions with scrollable tabs                                                                                                  |
+|                             | Shape tools, text elements, and freehand drawing                                                                                              |
+| ⚙️ **Editor Configuration** | 8 font families (Inter, JetBrains Mono, Fira Code, Source Code Pro, IBM Plex Mono, Cascadia Code, Geist Mono, System)                         |
+|                             | 7 font sizes (11–17px)                                                                                                                        |
+|                             | 12 syntax themes (Tokyo Night, Dracula, Nord, Catppuccin, Gruvbox, One Dark, Monokai, Rose Pine, Ayu Dark, GitHub Dark, Solarized Dark, Zinc) |
+|                             | Ligatures toggle for programming fonts                                                                                                        |
+| 🖥️ **macOS Features**       | Menu bar mode with compact window for quick access                                                                                            |
+|                             | Always-on-top window pinning                                                                                                                  |
+|                             | Homebrew-based auto-update with animated overlay                                                                                              |
+| 🔄 **Automatic Updates**    | 3 priority levels: normal, security, and critical (with countdown timer)                                                                      |
+|                             | Manual check and snooze options                                                                                                               |
+| 💾 **Local Storage**        | Private data stored locally, no cloud required                                                                                                |
+|                             | SQLite database with Drizzle ORM                                                                                                              |
+|                             | Offline-first design, privacy-focused                                                                                                         |
+| 🪟 **Window**               | Custom frameless window with native-like controls                                                                                             |
+|                             | Single instance lock                                                                                                                          |
+|                             | Animated transitions with Framer Motion                                                                                                       |
 
 ## 🚀 Installation
 
