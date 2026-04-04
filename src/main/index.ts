@@ -354,16 +354,9 @@ function createMainWindow(showOnReady: boolean): void {
     height: 640,
     minWidth: 400,
     minHeight: 300,
-    ...(isMac
-      ? {
-          titleBarStyle: 'hidden',
-          backgroundColor: '#09090b'
-        }
-      : {
-          frame: false,
-          transparent: true,
-          backgroundColor: '#00000000'
-        }),
+    frame: false,
+    transparent: true,
+    backgroundColor: '#00000000',
     show: false,
     autoHideMenuBar: true,
     resizable: true,
