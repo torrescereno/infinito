@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import { Check, RefreshCw, Github } from 'lucide-react'
-import { motion } from 'motion/react'
 import { cn } from '@renderer/lib/utils'
 import { Button } from '@renderer/components/ui/button'
 import type { FontSize, FontFamily, CodeTheme, Settings, UpdateInfo } from '@renderer/types'
@@ -73,14 +72,7 @@ export function ConfigView({
   }
 
   return (
-    <motion.div
-      key="config"
-      initial={{ opacity: 0, x: 8 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 8 }}
-      transition={{ duration: 0.15, ease: 'easeOut' }}
-      className="flex flex-col gap-4 pb-6"
-    >
+    <div className="flex flex-col gap-4 pb-6">
       {/* Typography */}
       <div className="rounded-xl bg-zinc-900/40 border border-zinc-800/30 p-4 space-y-4">
         <h2 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">
@@ -281,6 +273,6 @@ export function ConfigView({
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

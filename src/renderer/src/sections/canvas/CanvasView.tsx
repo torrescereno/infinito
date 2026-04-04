@@ -1,5 +1,4 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react'
-import { motion } from 'motion/react'
 import { Excalidraw } from '@excalidraw/excalidraw'
 import '@excalidraw/excalidraw/index.css'
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
@@ -141,14 +140,7 @@ export function CanvasView(): React.JSX.Element {
   }, [])
 
   return (
-    <motion.div
-      key="canvas"
-      initial={{ opacity: 0, y: 4 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -4 }}
-      transition={{ duration: 0.15 }}
-      className="relative flex flex-col h-full"
-    >
+    <div className="relative flex flex-col h-full">
       <CanvasSessionBar
         sessions={sessions}
         activeSessionId={activeSessionId}
@@ -171,6 +163,6 @@ export function CanvasView(): React.JSX.Element {
           }}
         />
       </div>
-    </motion.div>
+    </div>
   )
 }

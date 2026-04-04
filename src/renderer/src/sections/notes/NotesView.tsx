@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { motion } from 'motion/react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
@@ -92,14 +91,7 @@ export function NotesView(): React.JSX.Element {
   )
 
   return (
-    <motion.div
-      key="notes"
-      initial={{ opacity: 0, y: 4 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -4 }}
-      transition={{ duration: 0.15 }}
-      className="relative flex flex-col h-full"
-    >
+    <div className="relative flex flex-col h-full">
       <NoteSessionBar
         sessions={sessions}
         activeSessionId={activeSessionId}
@@ -166,6 +158,6 @@ export function NotesView(): React.JSX.Element {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   )
 }

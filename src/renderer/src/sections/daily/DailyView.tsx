@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react'
 import { CalendarPlus, Plus } from 'lucide-react'
-import { motion } from 'motion/react'
 import { cn } from '@renderer/lib/utils'
 import { Button } from '@renderer/components/ui/button'
 import { ConfirmDialog } from '@renderer/components/ui/ConfirmDialog'
@@ -59,14 +58,7 @@ export function DailyView({
   }, [])
 
   return (
-    <motion.div
-      key="daily"
-      initial={{ opacity: 0, x: 8 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 8 }}
-      transition={{ duration: 0.15, ease: 'easeOut' }}
-      className="space-y-px"
-    >
+    <div className="space-y-px">
       {!isEmpty && <NotesFilter query={query} onQueryChange={setQuery} />}
 
       {isEmpty ? (
@@ -150,6 +142,6 @@ export function DailyView({
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
       />
-    </motion.div>
+    </div>
   )
 }

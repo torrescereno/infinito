@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { AnimatePresence } from 'motion/react'
 import type { View } from '@renderer/types'
 import { windowService } from '@renderer/services'
 import { useBlocks, useSettings, useUpdate } from '@renderer/hooks'
@@ -187,45 +186,43 @@ export default function App(): React.JSX.Element {
               : 'overflow-y-auto'
           )}
         >
-          <AnimatePresence mode="wait">
-            {!isMenubarWindow && activeView === 'canvas' ? (
-              <CanvasView />
-            ) : activeView === 'notes' ? (
-              <NotesView />
-            ) : (
-              <div className="max-w-2xl mx-auto px-4 pt-5">
-                {!isMenubarWindow && activeView === 'config' ? (
-                  <ConfigView
-                    settings={settings}
-                    isMacOS={isMacOS}
-                    appMode={appMode}
-                    onFontSize={setFontSize}
-                    onFontFamily={setFontFamily}
-                    onCodeTheme={setCodeTheme}
-                    onLigatures={setLigatures}
-                    onAppMode={handleAppModeChange}
-                    onCheckUpdate={checkForUpdates}
-                    updateInfo={updateInfo}
-                    version={version}
-                  />
-                ) : (
-                  <DailyView
-                    groupedBlocks={groupedBlocks}
-                    focusedId={focusedId}
-                    collapsedIds={collapsedIds}
-                    highlightedId={null}
-                    onFocus={setFocusedId}
-                    onUpdate={updateBlock}
-                    onAddBlock={addBlock}
-                    onAddDay={addNewDay}
-                    onToggleCollapse={toggleCollapse}
-                    onDeleteGroup={deleteGroup}
-                    isEmpty={blocks.length === 0}
-                  />
-                )}
-              </div>
-            )}
-          </AnimatePresence>
+          {!isMenubarWindow && activeView === 'canvas' ? (
+            <CanvasView />
+          ) : activeView === 'notes' ? (
+            <NotesView />
+          ) : (
+            <div className="max-w-2xl mx-auto px-4 pt-5">
+              {!isMenubarWindow && activeView === 'config' ? (
+                <ConfigView
+                  settings={settings}
+                  isMacOS={isMacOS}
+                  appMode={appMode}
+                  onFontSize={setFontSize}
+                  onFontFamily={setFontFamily}
+                  onCodeTheme={setCodeTheme}
+                  onLigatures={setLigatures}
+                  onAppMode={handleAppModeChange}
+                  onCheckUpdate={checkForUpdates}
+                  updateInfo={updateInfo}
+                  version={version}
+                />
+              ) : (
+                <DailyView
+                  groupedBlocks={groupedBlocks}
+                  focusedId={focusedId}
+                  collapsedIds={collapsedIds}
+                  highlightedId={null}
+                  onFocus={setFocusedId}
+                  onUpdate={updateBlock}
+                  onAddBlock={addBlock}
+                  onAddDay={addNewDay}
+                  onToggleCollapse={toggleCollapse}
+                  onDeleteGroup={deleteGroup}
+                  isEmpty={blocks.length === 0}
+                />
+              )}
+            </div>
+          )}
         </main>
       </div>
     </>
