@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { Plus, X } from 'lucide-react'
+import { Plus, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@renderer/lib/utils'
 import type { CanvasSession } from '@renderer/types'
 import { ConfirmDialog } from '@renderer/components/ui/ConfirmDialog'
+import { useScrollableTabs } from '@renderer/hooks'
 
 interface CanvasSessionBarProps {
   sessions: CanvasSession[]
@@ -14,12 +15,14 @@ interface CanvasSessionBarProps {
 }
 
 function SessionTab({
+  sessionId,
   session,
   isActive,
   onSelect,
   onRequestDelete,
   onRename
 }: {
+  sessionId: string
   session: CanvasSession
   isActive: boolean
   onSelect: () => void
@@ -49,6 +52,7 @@ function SessionTab({
   return (
     <button
       type="button"
+      data-tab-id={sessionId}
       onClick={onSelect}
       onDoubleClick={(e) => {
         e.stopPropagation()
@@ -56,7 +60,7 @@ function SessionTab({
         setEditing(true)
       }}
       className={cn(
-        'group relative flex items-center gap-1 h-5 px-2 text-[11px] rounded-sm shrink-0 transition-colors',
+        'relative flex items-center gap-1 h-5 px-2 text-[11px] rounded-sm shrink-0 transition-colors',
         isActive ? 'bg-zinc-800 text-zinc-200' : 'text-zinc-500 hover:text-zinc-300'
       )}
     >
@@ -93,7 +97,10 @@ function SessionTab({
               onRequestDelete()
             }
           }}
-          className="hidden group-hover:flex items-center justify-center w-3 h-3 rounded-sm text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700"
+          className={cn(
+            'items-center justify-center w-3 h-3 rounded-sm text-zinc-500 hover:text-zinc-300 hover:bg-zinc-700',
+            isActive ? 'flex' : 'hidden'
+          )}
         >
           <X className="w-2.5 h-2.5" />
         </span>
@@ -111,6 +118,15 @@ export function CanvasSessionBar({
   onRename
 }: CanvasSessionBarProps): React.JSX.Element {
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+  const {
+    scrollRef,
+    canScrollLeft,
+    canScrollRight,
+    scrollLeft,
+    scrollRight,
+    scrollToEnd,
+    scrollToTab
+  } = useScrollableTabs()
 
   const pendingSession = pendingDeleteId ? sessions.find((s) => s.id === pendingDeleteId) : null
 
@@ -125,16 +141,45 @@ export function CanvasSessionBar({
     setPendingDeleteId(null)
   }, [])
 
+  const handleCreate = useCallback(() => {
+    onCreate()
+    scrollToEnd()
+  }, [onCreate, scrollToEnd])
+
+  const handleSelect = useCallback(
+    (id: string) => {
+      onSelect(id)
+      scrollToTab(id)
+    },
+    [onSelect, scrollToTab]
+  )
+
   return (
     <>
-      <div className="flex items-center h-7 px-2 bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800/30">
-        <div className="flex items-center gap-0.5 flex-1 min-w-0 overflow-x-auto scrollbar-hide">
+      <div className="max-w-2xl mx-auto w-full flex items-center h-7 px-2 bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-800/30">
+        <button
+          type="button"
+          onClick={scrollLeft}
+          className={cn(
+            'flex items-center justify-center h-5 w-4 shrink-0 rounded-sm transition-colors mr-0.5',
+            canScrollLeft
+              ? 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+              : 'text-zinc-800 pointer-events-none'
+          )}
+        >
+          <ChevronLeft className="w-3 h-3" />
+        </button>
+        <div
+          ref={scrollRef}
+          className="flex items-center gap-0.5 flex-1 min-w-0 overflow-x-auto scrollbar-hide"
+        >
           {sessions.map((session) => (
             <SessionTab
               key={session.id}
+              sessionId={session.id}
               session={session}
               isActive={session.id === activeSessionId}
-              onSelect={() => onSelect(session.id)}
+              onSelect={() => handleSelect(session.id)}
               onRequestDelete={() => setPendingDeleteId(session.id)}
               onRename={(name) => onRename(session.id, name)}
             />
@@ -142,7 +187,19 @@ export function CanvasSessionBar({
         </div>
         <button
           type="button"
-          onClick={onCreate}
+          onClick={scrollRight}
+          className={cn(
+            'flex items-center justify-center h-5 w-4 shrink-0 rounded-sm transition-colors ml-0.5',
+            canScrollRight
+              ? 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
+              : 'text-zinc-800 pointer-events-none'
+          )}
+        >
+          <ChevronRight className="w-3 h-3" />
+        </button>
+        <button
+          type="button"
+          onClick={handleCreate}
           className="flex items-center justify-center h-5 w-5 shrink-0 rounded-sm text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors ml-1"
           title="New canvas"
         >

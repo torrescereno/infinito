@@ -32,7 +32,7 @@ export function TitleBar({
   return (
     <header
       className={cn(
-        'drag-region sticky top-0 z-50 flex items-center justify-between px-3 py-2 bg-zinc-950 border-b border-zinc-900/50',
+        'drag-region sticky top-0 z-50 relative flex items-center px-3 py-2 bg-zinc-950 border-b border-zinc-900/50',
         isMacOS && 'pl-20'
       )}
     >
@@ -53,7 +53,7 @@ export function TitleBar({
         )}
       </div>
 
-      <div className="no-drag flex items-center bg-zinc-900/40 p-0.5 rounded-md border border-zinc-800/30">
+      <div className="no-drag absolute left-1/2 -translate-x-1/2 flex items-center bg-zinc-900/40 p-0.5 rounded-md border border-zinc-800/30">
         <Button
           variant={view === 'daily' ? 'secondary' : 'ghost'}
           size="sm"
@@ -128,18 +128,17 @@ export function TitleBar({
         )}
       </div>
 
-      {vimMode && (
-        <span
-          className={cn(
-            'text-[9px] font-mono uppercase tracking-wider',
-            vimLevel === 'view' ? 'text-zinc-400' : 'text-zinc-600'
-          )}
-        >
-          {vimLevel === 'view' ? '-- INSERT --' : 'NORMAL'}
-        </span>
-      )}
-
-      <div className="no-drag flex items-center gap-0.5">
+      <div className="ml-auto no-drag flex items-center gap-0.5">
+        {vimMode && (
+          <span
+            className={cn(
+              'text-[9px] font-mono uppercase tracking-wider mr-1',
+              vimLevel === 'view' ? 'text-zinc-400' : 'text-zinc-600'
+            )}
+          >
+            {vimLevel === 'view' ? '-- INSERT --' : 'NORMAL'}
+          </span>
+        )}
         {!isMenubarWindow && (
           <>
             <Button
