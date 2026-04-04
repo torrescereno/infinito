@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/blas-works/infinito/compare/v1.12.0...v1.12.1) (2026-04-04)
+
+
+### Bug Fixes
+
+* mensaje de actualizacion ([9446e04](https://github.com/blas-works/infinito/commit/9446e0400377686645e4654a24ec83507fdaa0bc))
+
 ## [1.12.0](https://github.com/blas-works/infinito/compare/v1.11.1...v1.12.0) (2026-04-03)
 
 
