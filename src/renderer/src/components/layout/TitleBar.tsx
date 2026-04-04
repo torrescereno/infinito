@@ -42,7 +42,7 @@ export function TitleBar({
         )}
       </div>
 
-      <div className="no-drag flex items-center bg-zinc-900/40 p-0.5 rounded-md border border-zinc-800/30">
+      <div className="no-drag absolute left-1/2 -translate-x-1/2 flex items-center bg-zinc-900/40 p-0.5 rounded-md border border-zinc-800/30">
         <Button
           variant={view === 'daily' ? 'secondary' : 'ghost'}
           size="sm"
