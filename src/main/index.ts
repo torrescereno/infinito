@@ -357,7 +357,8 @@ function createMainWindow(showOnReady: boolean): void {
     ...(isMac
       ? {
           titleBarStyle: 'hiddenInset',
-          backgroundColor: '#09090b'
+          transparent: true,
+          backgroundColor: '#00000000'
         }
       : {
           frame: false,

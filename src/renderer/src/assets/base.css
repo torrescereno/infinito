@@ -23,15 +23,21 @@
   --app-font-size: 12px;
   --app-font-family: 'Inter', sans-serif;
   --app-font-ligatures: none;
-  --app-font-features: "liga" 0, "calt" 0;
+  --app-font-features: 'liga' 0, 'calt' 0;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden;
   background: transparent;
   color: #fafafa;
   text-rendering: optimizeLegibility;

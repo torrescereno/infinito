@@ -33,7 +33,7 @@ export function TitleBar({
       )}
     >
       <div className="no-drag flex items-center gap-1">
-        {!isMenubarWindow && (
+        {!isMacOS && !isMenubarWindow && (
           <Button
             variant="ghost"
             size="icon"
@@ -157,6 +157,23 @@ export function TitleBar({
               </Button>
             </>
           )}
+        </div>
+      )}
+
+      {isMacOS && !isMenubarWindow && (
+        <div className="no-drag flex items-center gap-0.5">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onTogglePin}
+            className={cn(
+              'h-6 w-6 text-zinc-600 hover:text-zinc-300',
+              isPinned && 'text-zinc-300 bg-zinc-800/50'
+            )}
+            title="Pin on top"
+          >
+            <Pin className="w-3 h-3" />
+          </Button>
         </div>
       )}
     </header>

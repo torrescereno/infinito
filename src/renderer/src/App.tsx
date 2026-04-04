@@ -146,7 +146,7 @@ export default function App(): React.JSX.Element {
     return (
       <div
         className={cn(
-          'flex h-screen items-center justify-center bg-zinc-950',
+          'flex h-full items-center justify-center bg-zinc-950',
           !isMacOS && 'rounded-lg overflow-hidden'
         )}
       />
@@ -160,7 +160,7 @@ export default function App(): React.JSX.Element {
       )}
       <div
         className={cn(
-          'relative flex flex-col h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-zinc-800',
+          'relative flex flex-col h-full bg-zinc-950 text-zinc-50 font-sans selection:bg-zinc-800',
           !isMacOS && 'rounded-lg overflow-hidden'
         )}
         style={{ fontFamily: 'var(--app-font-family)' }}
