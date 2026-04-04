@@ -104,12 +104,17 @@ jobs:
         run: |
           VERSION="${{ needs.release.outputs.tag_name }}"
 
-          COMMITS=$(git log --pretty=format:"%s" HEAD~20..HEAD 2>/dev/null || echo "")
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$PREV_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"%s" "${PREV_TAG}..HEAD" 2>/dev/null || echo "")
+          else
+            COMMITS=$(git log --pretty=format:"%s" HEAD~20..HEAD 2>/dev/null || echo "")
+          fi
 
           PRIORITY="normal"
           MESSAGE="Bug fixes and improvements"
 
-          if echo "$COMMITS" | grep -qiE "(security|cve|vulnerability|xss|injection|auth|exploit)"; then
+          if echo "$COMMITS" | grep -qiE "(security-fix|cve-[0-9]|vulnerability|xss|injection|auth-bypass|exploit|csrf|privilege.escalation)"; then
             if echo "$COMMITS" | grep -qiE "(critical|urgent|breaking)"; then
               PRIORITY="critical"
               MESSAGE="Critical security update"

@@ -56,6 +56,7 @@ export function setupAutoUpdater(mainWindow: BrowserWindow, store: Store<StoreSc
 
   autoUpdater.on('update-not-available', () => {
     console.log('[AutoUpdater] No updates available')
+    storeRef?.set('pendingUpdate', null)
     sendUpdateStatus({ available: false })
   })
 
@@ -98,6 +99,14 @@ export function checkPendingUpdate(): void {
 
   const pending = storeRef.get('pendingUpdate')
   if (!pending) return
+
+  if (pending.version === app.getVersion()) {
+    console.log(
+      '[AutoUpdater] Pending update version matches current app version, clearing stale pending update'
+    )
+    storeRef.set('pendingUpdate', null)
+    return
+  }
 
   lastPriority = pending.priority
   updateDownloaded = true
@@ -321,6 +330,8 @@ function runBrewSteps(brewPath: string): void {
 
       sendUpdateStatus({ ...lastStatus, brewUpdating: true, brewStep: 'restarting' })
 
+      storeRef?.set('pendingUpdate', null)
+
       setTimeout(() => {
         app.relaunch()
         app.quit()
@@ -358,6 +369,8 @@ function fallbackToBackgroundScript(brewPath: string): void {
   }).unref()
 
   sendUpdateStatus({ ...lastStatus, brewUpdating: true, brewStep: 'restarting' })
+
+  storeRef?.set('pendingUpdate', null)
 
   setTimeout(() => {
     app.quit()
