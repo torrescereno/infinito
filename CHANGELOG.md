@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.13.0](https://github.com/blas-works/infinito/compare/v1.12.3...v1.13.0) (2026-04-04)
+
+
+### Features
+
+* se quita config vim ([f4bde7c](https://github.com/blas-works/infinito/commit/f4bde7c1bcba4fe1ed7d99e8454d05ce68398850))
+
+
+### Bug Fixes
+
+* banner ([98dca67](https://github.com/blas-works/infinito/commit/98dca67c9c558308ed1cf59aa8e40ddad7555e72))
+* vista de mac ([a470f59](https://github.com/blas-works/infinito/commit/a470f59d8b581e87b93eca4f9bfce3538ead73ff))
+
 ## [1.12.3](https://github.com/blas-works/infinito/compare/v1.12.2...v1.12.3) (2026-04-04)
 
 
