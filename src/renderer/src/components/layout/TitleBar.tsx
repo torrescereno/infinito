@@ -6,6 +6,7 @@ import type { View } from '@renderer/types'
 
 interface TitleBarProps {
   view: View
+  isMacOS: boolean
   isMenubarWindow: boolean
   isPinned: boolean
   vimMode?: boolean
@@ -18,6 +19,7 @@ interface TitleBarProps {
 
 export function TitleBar({
   view,
+  isMacOS,
   isMenubarWindow,
   isPinned,
   vimMode,
@@ -28,7 +30,12 @@ export function TitleBar({
   onOpenNormalApp
 }: TitleBarProps): React.JSX.Element {
   return (
-    <header className="drag-region sticky top-0 z-50 flex items-center justify-between px-3 py-2 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-900/50">
+    <header
+      className={cn(
+        'drag-region sticky top-0 z-50 flex items-center justify-between px-3 py-2 bg-zinc-950 border-b border-zinc-900/50',
+        isMacOS && 'pl-20'
+      )}
+    >
       <div className="no-drag flex items-center gap-1">
         {!isMenubarWindow && (
           <Button

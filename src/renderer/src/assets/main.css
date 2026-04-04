@@ -2,14 +2,23 @@
 
 html,
 body {
-  background: transparent !important;
+  background: #09090b !important;
 }
 
 #root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: #09090b;
+}
+
+.platform-linux #root {
   background: transparent;
+}
+
+.platform-linux html,
+.platform-linux body {
+  background: transparent !important;
 }
 
 /* Excalidraw container needs explicit dimensions */

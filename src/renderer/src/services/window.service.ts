@@ -8,10 +8,6 @@ export const windowService = {
   setAppMode: (mode: 'normal' | 'menubar'): Promise<'normal' | 'menubar'> =>
     window.api.setAppMode(mode),
   openNormalWindow: (): Promise<boolean> => window.api.openNormalWindow(),
-  maximize: async (): Promise<boolean> => {
-    const result = await window.api.maximizeWindow()
-    setTimeout(() => window.dispatchEvent(new Event('resize')), 100)
-    return result
-  },
+  maximize: (): Promise<boolean> => window.api.maximizeWindow(),
   isMaximized: (): Promise<boolean> => window.api.isMaximized()
 }

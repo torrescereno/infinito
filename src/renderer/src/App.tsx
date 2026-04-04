@@ -81,6 +81,7 @@ export default function App(): React.JSX.Element {
       .then((platform) => {
         const isMac = platform === 'darwin'
         setIsMacOS(isMac)
+        document.documentElement.classList.toggle('platform-linux', !isMac)
         if (!isMac) {
           setAppMode('normal')
           return
@@ -157,7 +158,12 @@ export default function App(): React.JSX.Element {
 
   if (!loaded) {
     return (
-      <div className="flex h-screen items-center justify-center bg-zinc-950 rounded-lg overflow-hidden" />
+      <div
+        className={cn(
+          'flex h-screen items-center justify-center bg-zinc-950',
+          !isMacOS && 'rounded-lg overflow-hidden'
+        )}
+      />
     )
   }
 
@@ -167,11 +173,15 @@ export default function App(): React.JSX.Element {
         <BrewUpdateOverlay step={updateInfo.brewStep} version={updateInfo.version} />
       )}
       <div
-        className="relative flex flex-col h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-zinc-800 rounded-lg overflow-hidden"
+        className={cn(
+          'relative flex flex-col h-screen bg-zinc-950 text-zinc-50 font-sans selection:bg-zinc-800',
+          !isMacOS && 'rounded-lg overflow-hidden'
+        )}
         style={{ fontFamily: 'var(--app-font-family)' }}
       >
         <TitleBar
           view={activeView}
+          isMacOS={isMacOS}
           isMenubarWindow={isMenubarWindow}
           isPinned={isPinned}
           vimMode={settings.vimMode}
