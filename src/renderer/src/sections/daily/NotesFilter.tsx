@@ -13,6 +13,13 @@ export function NotesFilter({ query, onQueryChange }: NotesFilterProps): React.J
         type="text"
         value={query}
         onChange={(e) => onQueryChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            e.preventDefault()
+            onQueryChange('')
+            ;(e.target as HTMLInputElement).blur()
+          }
+        }}
         placeholder="Search..."
         data-search
         className="w-full bg-transparent text-xs text-zinc-300 placeholder:text-zinc-700 outline-none"

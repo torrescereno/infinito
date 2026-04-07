@@ -3,7 +3,15 @@ import { Check, RefreshCw, Github } from 'lucide-react'
 import { cn } from '@renderer/lib/utils'
 import { Button } from '@renderer/components/ui/button'
 import type { FontSize, FontFamily, CodeTheme, Settings, UpdateInfo } from '@renderer/types'
-import { FONT_SIZES, FONT_FAMILIES, CODE_THEMES } from '@renderer/types'
+import {
+  FONT_SIZES,
+  FONT_FAMILIES,
+  CODE_THEMES,
+  SHORTCUT_GROUPS,
+  SHORTCUTS,
+  formatShortcutKeys
+} from '@renderer/types'
+import { useIsMac } from '@renderer/hooks'
 
 interface ConfigViewProps {
   settings: Settings
@@ -32,6 +40,8 @@ export function ConfigView({
   updateInfo,
   version
 }: ConfigViewProps): React.JSX.Element {
+  const isMac = useIsMac()
+
   const [checking, setChecking] = useState(false)
   const [upToDate, setUpToDate] = useState(false)
   const updateInfoRef = useRef(updateInfo)
@@ -189,6 +199,37 @@ export function ConfigView({
             ))}
           </div>
         </section>
+      </div>
+
+      {/* Shortcuts */}
+      <div className="rounded-xl bg-zinc-900/40 border border-zinc-800/30 p-4 space-y-3">
+        <h2 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest">
+          Shortcuts
+        </h2>
+        <div className="space-y-3">
+          {SHORTCUT_GROUPS.map((group) => {
+            const groupShortcuts = SHORTCUTS.filter((s) => s.group === group)
+            if (groupShortcuts.length === 0) return null
+            return (
+              <div key={group} className="space-y-1">
+                <label className="text-[10px] text-zinc-600 font-medium">{group}</label>
+                <div className="space-y-0.5">
+                  {groupShortcuts.map((shortcut) => (
+                    <div
+                      key={shortcut.id}
+                      className="flex items-center justify-between h-6 px-2 rounded-md text-xs"
+                    >
+                      <span className="text-zinc-400">{shortcut.label}</span>
+                      <kbd className="text-[10px] font-mono text-zinc-500 bg-zinc-800/60 px-1.5 py-0.5 rounded">
+                        {formatShortcutKeys(shortcut.keys, isMac)}
+                      </kbd>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
 
       {isMacOS && (

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
-import { useNoteSessions } from '@renderer/hooks'
+import { useNoteSessions, useKeyboardShortcut } from '@renderer/hooks'
 import { CodeBlock } from '@renderer/components/markdown'
 import { NoteSessionBar, type EditorMode } from './NoteSessionBar'
 
@@ -20,6 +20,16 @@ export function NotesView({ reloadTrigger }: { reloadTrigger?: number }): React.
 
   const [mode, setMode] = useState<EditorMode>('preview')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const toggleMode = useCallback(() => {
+    setMode((m) => (m === 'edit' ? 'preview' : 'edit'))
+  }, [])
+
+  useKeyboardShortcut('mod+e', toggleMode)
+  useKeyboardShortcut('mod+n', createSession)
+  useKeyboardShortcut('mod+w', () => {
+    if (activeSessionId) deleteSession(activeSessionId)
+  })
 
   useEffect(() => {
     if (mode === 'edit' && textareaRef.current) {

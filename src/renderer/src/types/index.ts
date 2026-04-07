@@ -4,3 +4,5 @@ export { FONT_SIZES, FONT_FAMILIES, CODE_THEMES, DEFAULT_SETTINGS } from './sett
 export type { UpdatePriority, UpdateMetadata, UpdateInfo, PendingUpdate, BrewStep } from './update'
 export type { CanvasSession, CanvasSessionRegistry } from './canvas'
 export type { NoteSession, NoteSessionRegistry } from './note'
+export type { ShortcutDef, ShortcutGroup } from './shortcuts'
+export { SHORTCUTS, SHORTCUT_GROUPS, formatShortcutKeys } from './shortcuts'

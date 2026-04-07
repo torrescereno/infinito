@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import type { View } from '@renderer/types'
 import { windowService } from '@renderer/services'
-import { useBlocks, useSettings, useUpdate } from '@renderer/hooks'
+import { useBlocks, useSettings, useUpdate, useKeyboardShortcut } from '@renderer/hooks'
 import { cn } from '@renderer/lib/utils'
 import { TitleBar } from '@renderer/components/layout'
 import { UpdateNotification } from '@renderer/components/UpdateNotification'
@@ -40,21 +40,21 @@ export default function App(): React.JSX.Element {
   const { updateInfo, checkForUpdates, restartNow, snoozeUpdate, brewUpgrade, dismissUpdate } =
     useUpdate()
 
-  // Global Ctrl+P: go to daily search
-  useEffect(() => {
-    const handleGlobalSearch = (e: KeyboardEvent): void => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
-        e.preventDefault()
-        setView('daily')
-        requestAnimationFrame(() => {
-          const filterInput = document.querySelector<HTMLInputElement>('[data-search]')
-          filterInput?.focus()
-        })
-      }
-    }
-    document.addEventListener('keydown', handleGlobalSearch)
-    return () => document.removeEventListener('keydown', handleGlobalSearch)
+  const navigateToSearch = useCallback(() => {
+    setView('daily')
+    requestAnimationFrame(() => {
+      const filterInput = document.querySelector<HTMLInputElement>('[data-search]')
+      filterInput?.focus()
+    })
   }, [])
+
+  const isMenubar = windowKind === 'menubar'
+
+  useKeyboardShortcut('mod+1', () => setView('daily'), { enabled: !isMenubar })
+  useKeyboardShortcut('mod+2', () => setView('notes'))
+  useKeyboardShortcut('mod+3', () => setView('canvas'), { enabled: !isMenubar })
+  useKeyboardShortcut('mod+4', () => setView('config'), { enabled: !isMenubar })
+  useKeyboardShortcut('mod+p', navigateToSearch)
 
   useEffect(() => {
     window.api

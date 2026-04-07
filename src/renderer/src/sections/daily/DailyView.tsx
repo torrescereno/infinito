@@ -4,7 +4,7 @@ import { cn } from '@renderer/lib/utils'
 import { Button } from '@renderer/components/ui/button'
 import { ConfirmDialog } from '@renderer/components/ui/ConfirmDialog'
 import type { DateGroup as DateGroupType } from '@renderer/types'
-import { useNotesFilter } from '@renderer/hooks/useNotesFilter'
+import { useNotesFilter, useKeyboardShortcut } from '@renderer/hooks'
 import { BlockItem } from './BlockItem'
 import { DateGroup } from './DateGroup'
 import { NotesFilter } from './NotesFilter'
@@ -38,6 +38,8 @@ export function DailyView({
 }: DailyViewProps): React.JSX.Element {
   const { query, isActive, filteredGroups, setQuery } = useNotesFilter(groupedBlocks)
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+
+  useKeyboardShortcut('mod+shift+e', onAddBlock, { enabled: !isActive })
 
   const pendingDateLabel = pendingDeleteId
     ? groupedBlocks

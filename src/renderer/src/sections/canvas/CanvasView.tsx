@@ -3,7 +3,7 @@ import { Excalidraw } from '@excalidraw/excalidraw'
 import '@excalidraw/excalidraw/index.css'
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
 import type { AppState } from '@excalidraw/excalidraw/types'
-import { useCanvasSessions } from '@renderer/hooks'
+import { useCanvasSessions, useKeyboardShortcut } from '@renderer/hooks'
 import { CanvasSessionBar } from './CanvasSessionBar'
 
 if (typeof window !== 'undefined' && !window.EXCALIDRAW_ASSET_PATH) {
@@ -109,6 +109,11 @@ export function CanvasView(): React.JSX.Element {
     deleteSession,
     renameSession
   } = useCanvasSessions()
+
+  useKeyboardShortcut('mod+n', createSession)
+  useKeyboardShortcut('mod+w', () => {
+    if (activeSessionId) deleteSession(activeSessionId)
+  })
 
   const [renderedSessionId, setRenderedSessionId] = useState(activeSessionId)
   const [excalidrawReady, setExcalidrawReady] = useState(true)
