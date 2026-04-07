@@ -35,7 +35,7 @@ interface UseNoteSessionsReturn {
   updateContent: (content: string) => void
 }
 
-export function useNoteSessions(): UseNoteSessionsReturn {
+export function useNoteSessions(reloadTrigger?: number): UseNoteSessionsReturn {
   const [registry, setRegistry] = useState<NoteSessionRegistry>(loadRegistry)
   const [content, setContent] = useState<string>(() => {
     const initial = loadRegistry()
@@ -45,6 +45,13 @@ export function useNoteSessions(): UseNoteSessionsReturn {
   useEffect(() => {
     localStorage.setItem(REGISTRY_KEY, JSON.stringify(registry))
   }, [registry])
+
+  useEffect(() => {
+    if (reloadTrigger === undefined || reloadTrigger === 0) return
+    const fresh = loadRegistry()
+    setRegistry(fresh)
+    setContent(loadSessionContent(fresh.activeSessionId))
+  }, [reloadTrigger])
 
   useEffect(() => {
     const handleStorage = (e: StorageEvent): void => {

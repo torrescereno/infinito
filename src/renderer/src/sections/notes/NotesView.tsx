@@ -6,7 +6,7 @@ import { useNoteSessions } from '@renderer/hooks'
 import { CodeBlock } from '@renderer/components/markdown'
 import { NoteSessionBar, type EditorMode } from './NoteSessionBar'
 
-export function NotesView(): React.JSX.Element {
+export function NotesView({ reloadTrigger }: { reloadTrigger?: number }): React.JSX.Element {
   const {
     sessions,
     activeSessionId,
@@ -16,7 +16,7 @@ export function NotesView(): React.JSX.Element {
     deleteSession,
     renameSession,
     updateContent
-  } = useNoteSessions()
+  } = useNoteSessions(reloadTrigger)
 
   const [mode, setMode] = useState<EditorMode>('preview')
   const textareaRef = useRef<HTMLTextAreaElement>(null)

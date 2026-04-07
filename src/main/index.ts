@@ -200,6 +200,7 @@ function showMenubarWindow(): void {
 
   if (!menubarWindow) return
 
+  menubarWindow.webContents.send('app:reload-data')
   menubarWindow.webContents.send('app:show-notes')
   positionMenubarWindow()
   menubarWindow.show()

@@ -199,7 +199,7 @@ export default function App(): React.JSX.Element {
           {!isMenubarWindow && activeView === 'canvas' ? (
             <CanvasView />
           ) : activeView === 'notes' ? (
-            <NotesView />
+            <NotesView reloadTrigger={reloadTrigger} />
           ) : (
             <div className="max-w-2xl mx-auto px-4 pt-5">
               {!isMenubarWindow && activeView === 'config' ? (
