@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.15.0](https://github.com/blas-works/infinito/compare/v1.14.1...v1.15.0) (2026-04-07)
+
+
+### Features
+
+* config atajos ([8dbf9f0](https://github.com/blas-works/infinito/commit/8dbf9f0c99fca7aec500d6285409abd15c4ea238))
+
+
+### Bug Fixes
+
+* navbar modo tray ([c9a504a](https://github.com/blas-works/infinito/commit/c9a504a72b23f615d2fc7b72075ec0909aac1116))
+* sincronizacion entre tray y modo app ([df7824f](https://github.com/blas-works/infinito/commit/df7824f8af88a535f746a7e2d22dd8ea59f2aef5))
+* test ([a002f60](https://github.com/blas-works/infinito/commit/a002f603c10326df2836e77a54fef197089c0605))
+
 ## [1.14.1](https://github.com/blas-works/infinito/compare/v1.14.0...v1.14.1) (2026-04-04)
 
 
