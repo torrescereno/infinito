@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, startTransition } from 'react'
 import { generateId } from '@renderer/lib/id'
 import type { NoteSession, NoteSessionRegistry } from '@renderer/types'
 
@@ -49,8 +49,10 @@ export function useNoteSessions(reloadTrigger?: number): UseNoteSessionsReturn {
   useEffect(() => {
     if (reloadTrigger === undefined || reloadTrigger === 0) return
     const fresh = loadRegistry()
-    setRegistry(fresh)
-    setContent(loadSessionContent(fresh.activeSessionId))
+    startTransition(() => {
+      setRegistry(fresh)
+      setContent(loadSessionContent(fresh.activeSessionId))
+    })
   }, [reloadTrigger])
 
   useEffect(() => {
