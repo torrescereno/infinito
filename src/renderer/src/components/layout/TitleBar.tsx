@@ -28,8 +28,9 @@ export function TitleBar({
   return (
     <header
       className={cn(
-        'drag-region sticky top-0 z-50 flex items-center justify-between px-3 py-2 bg-zinc-950 border-b border-zinc-900/50',
-        isMacOS && 'pl-20'
+        'drag-region sticky top-0 z-50 flex items-center justify-between px-3 bg-zinc-950 border-b border-zinc-900/50',
+        isMenubarWindow ? 'py-3' : 'py-2',
+        isMacOS && !isMenubarWindow && 'pl-20'
       )}
     >
       <div className="no-drag flex items-center gap-1">
