@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.15.1](https://github.com/blas-works/infinito/compare/v1.15.0...v1.15.1) (2026-07-27)
+
+
+### Bug Fixes
+
+* update window shortcut optimizer to include zoom option ([6bf2e6c](https://github.com/blas-works/infinito/commit/6bf2e6cbb0b14efbb2921fc84190a26ac8ec9433))
+* update window shortcut optimizer to include zoom option ([557f21e](https://github.com/blas-works/infinito/commit/557f21e3f47e6f4e31acc900891f7e7fe0cdefed))
+
 ## [1.15.0](https://github.com/blas-works/infinito/compare/v1.14.1...v1.15.0) (2026-04-07)
 
 
