@@ -443,7 +443,7 @@ if (!gotTheLock) {
     initDatabase()
 
     app.on('browser-window-created', (_, window) => {
-      optimizer.watchWindowShortcuts(window)
+      optimizer.watchWindowShortcuts(window, { zoom: true })
     })
 
     ipcMain.handle('toggle-pin', (event) => {
